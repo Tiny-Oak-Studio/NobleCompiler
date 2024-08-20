@@ -1,0 +1,3 @@
+[submodule "NobleCore"]
+	path = NobleCore
+	url = https://github.com/Tiny-Oak-Studio/NobleCore.git
