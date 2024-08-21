@@ -1,12 +1,14 @@
-#ifndef LEXER_H
-#define LEXER_H
+#ifndef NOBLE_COMPILER_LEXER_H_INCLUDED
+#define NOBLE_COMPILER_LEXER_H_INCLUDED
 
-namespace Noble::Compiler {
-    class Lexer {
+namespace Noble::Compiler
+{
+    class Lexer
+    {
     public:
 
     protected:
     };
 } // Noble::Compiler
 
-#endif //LEXER_H
+#endif //NOBLE_COMPILER_LEXER_H_INCLUDED

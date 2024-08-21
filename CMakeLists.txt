@@ -23,6 +23,8 @@ add_executable(
         Lexer.cpp
         Lexer.h
         NobleCompilerTests/LexerTests.cpp
+        Parser.cpp
+        Parser.h
 )
 target_link_libraries(
         NobleCompilerTests
