@@ -19,12 +19,17 @@ enable_testing()
 
 add_executable(
         NobleCompilerTests
-        NobleCompilerTests/NobleCompilerTests.cpp
         Lexer.cpp
         Lexer.h
-        NobleCompilerTests/LexerTests.cpp
         Parser.cpp
         Parser.h
+        Compiler.cpp
+        Compiler.h
+        NobleCompilerTests/NobleCompilerTests.cpp
+        NobleCompilerTests/LexerTests.cpp
+        NobleCompilerTests/CompilerTests.cpp
+        Token.cpp
+        Token.h
 )
 target_link_libraries(
         NobleCompilerTests
