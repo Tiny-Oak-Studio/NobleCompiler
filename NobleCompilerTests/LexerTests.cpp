@@ -7,7 +7,7 @@ using namespace Noble::Compiler;
 TEST(Lexer, Empty)
 {
     Lexer lexer;
-    std::vector<Token> tokens = lexer.Lex("");
+    const std::vector<Token> tokens = lexer.Lex("");
 
     EXPECT_EQ(tokens[0].type, Token::Type::EndOfFile);
 }
@@ -15,7 +15,7 @@ TEST(Lexer, Empty)
 TEST(Lexer, SingleKeyword)
 {
     Lexer lexer;
-    std::vector<Token> tokens = lexer.Lex("function");
+    const std::vector<Token> tokens = lexer.Lex("function");
 
     EXPECT_EQ(tokens[0].type, Token::Type::Function);
 }
@@ -23,7 +23,7 @@ TEST(Lexer, SingleKeyword)
 TEST(Lexer, AllKeywords)
 {
     Lexer lexer;
-    std::vector<Token> tokens = lexer.Lex("and class else false for function if null or print return super this true var while");
+    const std::vector<Token> tokens = lexer.Lex("and class else false for function if null or print return super this true var while");
 
     EXPECT_EQ(tokens[0].type, Token::Type::And);
     EXPECT_EQ(tokens[1].type, Token::Type::Class);
@@ -148,4 +148,12 @@ TEST(Lexer, WrongNumberWithoutDecimal)
     EXPECT_EQ(tokens[0].type, Token::Type::Number);
     EXPECT_EQ(tokens[1].type, Token::Type::Dot);
     EXPECT_EQ(tokens[2].type, Token::Type::EndOfFile);
+}
+
+TEST(Lexer, UnknownCharacter)
+{
+    Lexer lexer;
+    const std::vector<Token> tokens = lexer.Lex("|");
+
+    EXPECT_EQ(tokens[0].type, Token::Type::Error);
 }

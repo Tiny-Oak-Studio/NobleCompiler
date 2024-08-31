@@ -1,6 +1,8 @@
 #ifndef TOKEN_H_INCLUDED
 #define TOKEN_H_INCLUDED
 
+#include <string>
+
 namespace Noble::Compiler
 {
     struct Token
@@ -33,6 +35,10 @@ namespace Noble::Compiler
 
         const char* firstCharacter = nullptr;
         const char* lastCharacter = nullptr;
+
+        Token() = default;
+        Token(Type type, const char* firstChar, const char* lastChar);
+        explicit Token(const std::string& errorMessage);
     };
 } // Noble::Compiler
 

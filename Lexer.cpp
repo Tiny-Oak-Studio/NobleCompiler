@@ -5,7 +5,7 @@ namespace Noble::Compiler
     std::vector<Token> Lexer::Lex(const std::string &NGPLSource)
     {
         std::vector<Token> tokens;
-        startCharacter = currentCharacter = &NGPLSource[0];
+        startScanHead = currentScanHead = &NGPLSource[0];
 
         Token token;
         while (token.type != Token::Type::EndOfFile)
@@ -20,13 +20,13 @@ namespace Noble::Compiler
 
     Token Lexer::ReadToken()
     {
-        startCharacter = currentCharacter;
+        startScanHead = currentScanHead;
 
         if (AtEndOfFile()) return MakeToken(Token::Type::EndOfFile);
 
         const char c = ReadCharacter();
-        if (IsAlpha(c)) return ReadIdentifier();
-        if (IsDigit(c)) return ReadNumber();
+        if (std::isalpha(c) or c == '_') return ReadIdentifier();
+        if (std::isdigit(c)) return ReadNumber();
 
         switch (c)
         {
@@ -48,59 +48,31 @@ namespace Noble::Compiler
             case '>': return MakeToken(MatchNext('=') ? Token::Type::GreaterEqual : Token::Type::Greater);
             case '"': return ReadString();
 
-            default: return MakeErrorToken("Unexpected character.");
+            default: return Token("Unexpected character.");
         }
     }
 
     Token Lexer::MakeToken(const Token::Type type) const
     {
-        Token token;
-        token.type = type;
-        token.firstCharacter = startCharacter;
-        token.lastCharacter = currentCharacter;
-        return token;
-    }
-
-    Token Lexer::MakeErrorToken(const std::string& errorMessage) const
-    {
-        Token token;
-        token.type = Token::Type::Error;
-        token.firstCharacter = &errorMessage.front();
-        token.lastCharacter = &errorMessage.back();
-        return token;
+        return { type, startScanHead, currentScanHead };
     }
 
     char Lexer::ReadCharacter()
     {
-        return *currentCharacter++;
+        return *currentScanHead++;
     }
 
     bool Lexer::AtEndOfFile() const
     {
-        return *currentCharacter == '\0';
+        return *currentScanHead == '\0';
     }
 
     bool Lexer::MatchNext(const char c)
     {
         if (AtEndOfFile()) return false;
-        if (*currentCharacter != c) return false;
-        currentCharacter++; //Eat the next character only if it matches
+        if (*currentScanHead != c) return false;
+        currentScanHead++; //Eat the next character only if it matches
         return true;
-    }
-
-    bool Lexer::IsDigit(const char c)
-    {
-        return c >= '0' and c <= '9';
-    }
-
-    bool Lexer::IsAlpha(const char c)
-    {
-        return (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z');
-    }
-
-    bool Lexer::IsAlphaNumeric(const char c)
-    {
-        return IsDigit(c) or IsAlpha(c);
     }
 
     void Lexer::SkipWhitespace()
@@ -110,6 +82,8 @@ namespace Noble::Compiler
             switch (Peek())
             {
                 case ' ':
+                case '\v':
+                case '\f':
                 case '\r':
                 case '\t':
                     ReadCharacter();
@@ -118,7 +92,7 @@ namespace Noble::Compiler
                 {
                     if (Peek(1) == '/')
                     {
-                        while (!AtEndOfFile() && Peek() != '\n') ReadCharacter();
+                        while (!AtEndOfFile() and Peek() != '\n') ReadCharacter();
                     }
                     else return;
                     break;
@@ -131,13 +105,13 @@ namespace Noble::Compiler
     char Lexer::Peek(const int offset) const
     {
         if (AtEndOfFile()) return '\0';
-        return *(currentCharacter + offset);
+        return *(currentScanHead + offset);
     }
 
     Token Lexer::ReadString()
     {
         while (!AtEndOfFile() and Peek() != '"') ReadCharacter();
-        if (AtEndOfFile()) return MakeErrorToken("Unterminated string.");
+        if (AtEndOfFile()) return Token("Unterminated string.");
 
         //Eat the close quote
         ReadCharacter();
@@ -146,13 +120,13 @@ namespace Noble::Compiler
 
     Token Lexer::ReadNumber()
     {
-        while (IsDigit(Peek())) ReadCharacter();
+        while (std::isdigit(Peek())) ReadCharacter();
 
         //Check for decimal part
-        if (Peek() == '.' and IsDigit(Peek(1)))
+        if (Peek() == '.' and std::isdigit(Peek(1)))
         {
             ReadCharacter(); //Eat the point
-            while (IsDigit(Peek())) ReadCharacter(); //Eat all decimal digits
+            while (std::isdigit(Peek())) ReadCharacter(); //Eat all decimal digits
         }
 
         return MakeToken(Token::Type::Number);
@@ -160,22 +134,22 @@ namespace Noble::Compiler
 
     Token Lexer::ReadIdentifier()
     {
-        while (IsAlpha(Peek()) or IsDigit(Peek())) ReadCharacter();
+        while (std::isalnum(Peek())) ReadCharacter();
         return MakeToken(GetIdentifierType());
     }
 
-    Token::Type Lexer::GetIdentifierType()
+    Token::Type Lexer::GetIdentifierType() const
     {
-        switch (*startCharacter)
+        switch (*startScanHead)
         {
             case 'a': return KeywordCheck(1, "nd", Token::Type::And);
             case 'c': return KeywordCheck(1, "lass", Token::Type::Class);
             case 'e': return KeywordCheck(1, "lse", Token::Type::Else);
             case 'f':
             {
-                if (currentCharacter - startCharacter > 1)
+                if (currentScanHead - startScanHead > 1)
                 {
-                    switch (*(startCharacter + 1))
+                    switch (*(startScanHead + 1))
                     {
                         case 'a': return KeywordCheck(2, "lse", Token::Type::False);
                         case 'o': return KeywordCheck(2, "r", Token::Type::For);
@@ -193,9 +167,9 @@ namespace Noble::Compiler
             case 's': return KeywordCheck(1, "uper", Token::Type::Super);
             case 't':
             {
-                if (currentCharacter - startCharacter > 1)
+                if (currentScanHead - startScanHead > 1)
                 {
-                    switch (*(startCharacter + 1))
+                    switch (*(startScanHead + 1))
                     {
                         case 'h': return KeywordCheck(2, "is", Token::Type::This);
                         case 'r': return KeywordCheck(2, "ue", Token::Type::True);
@@ -212,11 +186,10 @@ namespace Noble::Compiler
 
     Token::Type Lexer::KeywordCheck(const int offset, const std::string& rest, const Token::Type type) const
     {
-        if (currentCharacter - startCharacter == offset + rest.size() and std::memcmp(startCharacter + offset, rest.c_str(), rest.size()) == 0)
+        if (currentScanHead - startScanHead == offset + rest.size() and std::memcmp(startScanHead + offset, rest.c_str(), rest.size()) == 0)
         {
             return type;
         }
         return Token::Identifier;
     }
-
 } // Noble::Compiler
