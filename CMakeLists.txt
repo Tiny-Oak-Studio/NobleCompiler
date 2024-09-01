@@ -25,11 +25,22 @@ add_executable(
         Parser.h
         Compiler.cpp
         Compiler.h
+        Token.cpp
+        Token.h
+        AST/Expression.cpp
+        AST/Expression.h
+        AST/BinaryExpression.cpp
+        AST/BinaryExpression.h
+        AST/GroupingExpression.cpp
+        AST/GroupingExpression.h
+        AST/UnaryExpression.cpp
+        AST/UnaryExpression.h
+        AST/LiteralExpression.h
+        AST/LiteralExpression.cpp
         NobleCompilerTests/NobleCompilerTests.cpp
         NobleCompilerTests/LexerTests.cpp
         NobleCompilerTests/CompilerTests.cpp
-        Token.cpp
-        Token.h
+        NobleCompilerTests/ASTTests.cpp
 )
 target_link_libraries(
         NobleCompilerTests
