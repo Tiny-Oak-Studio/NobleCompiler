@@ -29,6 +29,7 @@ add_executable(
         Token.h
         AST/Expression.cpp
         AST/Expression.h
+        AST/ExpressionVisitor.h
         AST/BinaryExpression.cpp
         AST/BinaryExpression.h
         AST/GroupingExpression.cpp

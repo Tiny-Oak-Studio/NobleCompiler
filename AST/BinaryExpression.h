@@ -2,18 +2,20 @@
 #define BINARYEXPRESSION_H
 
 #include "Expression.h"
+#include "ExpressionVisitor.h"
 #include "../Token.h"
 
 namespace Noble::Compiler::AST
 {
-    class BinaryExpression : public Expression
+    struct BinaryExpression final : Expression
     {
-    public:
         const Expression* left = nullptr;
         const Token* operation = nullptr;
         const Expression* right = nullptr;
 
         BinaryExpression(const Expression* left, const Token* operation, const Expression* right);
+
+        void Accept(ExpressionVisitor *visitor) override;
     };
 } // Noble
 

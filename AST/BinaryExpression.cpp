@@ -7,4 +7,9 @@ namespace Noble::Compiler::AST
         operation(operation),
         right(right)
     {}
+
+    void BinaryExpression::Accept(ExpressionVisitor* visitor)
+    {
+        visitor->Visit(this);
+    }
 } // Noble

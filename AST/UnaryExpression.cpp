@@ -7,4 +7,8 @@ namespace Noble::Compiler::AST
         right(right)
     {}
 
+    void UnaryExpression::Accept(ExpressionVisitor* visitor)
+    {
+        visitor->Visit(this);
+    }
 }

@@ -3,18 +3,15 @@
 
 #include <string>
 #include <stdfloat>
+#include <variant>
 #include "Expression.h"
+#include "ExpressionVisitor.h"
 
 namespace Noble::Compiler::AST
 {
-    struct LiteralExpression : Expression
+    struct LiteralExpression final : Expression
     {
-        union
-        {
-            std::string string;
-            std::float64_t number;
-            bool boolean;
-        } as;
+        std::variant<std::string, std::float64_t, bool> as;
 
         enum Type
         {
@@ -25,6 +22,8 @@ namespace Noble::Compiler::AST
         };
 
         Type type = Null;
+
+        void Accept(ExpressionVisitor *visitor) override;
     };
 }
 
