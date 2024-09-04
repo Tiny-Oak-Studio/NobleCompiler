@@ -9,13 +9,13 @@ namespace Noble::Compiler::AST
 {
     struct BinaryExpression final : Expression
     {
-        const Expression* left = nullptr;
+        Expression *left = nullptr;
         const Token* operation = nullptr;
-        const Expression* right = nullptr;
+        Expression *right = nullptr;
 
-        BinaryExpression(const Expression* left, const Token* operation, const Expression* right);
+        BinaryExpression(Expression* left, const Token* operation, Expression* right);
 
-        void Accept(ExpressionVisitor *visitor) override;
+        std::any Accept(ExpressionVisitor *visitor) override;
     };
 } // Noble
 

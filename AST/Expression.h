@@ -1,6 +1,8 @@
 #ifndef EXPRESSION_H_INCLUDED
 #define EXPRESSION_H_INCLUDED
 
+#include <any>
+
 namespace Noble::Compiler::AST
 {
     /**
@@ -9,7 +11,7 @@ namespace Noble::Compiler::AST
     struct Expression
     {
         virtual ~Expression() = default;
-        virtual void Accept(struct ExpressionVisitor* visitor) = 0;
+        virtual std::any Accept(struct ExpressionVisitor* visitor) = 0;
     };
 } // Noble
 

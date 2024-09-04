@@ -8,11 +8,11 @@ namespace Noble::Compiler::AST
 {
     struct GroupingExpression final : Expression
     {
-        const Expression* expression = nullptr;
+        Expression* expression = nullptr;
 
-        GroupingExpression(const Expression* expression);
+        GroupingExpression(Expression* expression);
 
-        void Accept(ExpressionVisitor *visitor) override;
+        std::any Accept(ExpressionVisitor *visitor) override;
     };
 } // Noble
 

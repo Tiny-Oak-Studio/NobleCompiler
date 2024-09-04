@@ -2,14 +2,14 @@
 
 namespace Noble::Compiler::AST
 {
-    BinaryExpression::BinaryExpression(const Expression* left, const Token* operation, const Expression* right) :
+    BinaryExpression::BinaryExpression(Expression* left, const Token* operation, Expression* right) :
         left(left),
         operation(operation),
         right(right)
     {}
 
-    void BinaryExpression::Accept(ExpressionVisitor* visitor)
+    std::any BinaryExpression::Accept(ExpressionVisitor* visitor)
     {
-        visitor->Visit(this);
+        return visitor->Visit(this);
     }
 } // Noble

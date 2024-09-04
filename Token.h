@@ -1,6 +1,7 @@
 #ifndef TOKEN_H_INCLUDED
 #define TOKEN_H_INCLUDED
 
+#include <stdfloat>
 #include <string>
 
 namespace Noble::Compiler
@@ -39,6 +40,9 @@ namespace Noble::Compiler
         Token() = default;
         Token(Type type, const char* firstChar, const char* lastChar);
         explicit Token(const std::string& errorMessage);
+
+        [[nodiscard]] std::string ToString() const;
+        [[nodiscard]] std::float64_t ToFloat() const;
     };
 } // Noble::Compiler
 

@@ -7,14 +7,14 @@
 
 namespace Noble::Compiler::AST
 {
-    struct UnaryExpression final : public Expression
+    struct UnaryExpression final : Expression
     {
         const Token* operation = nullptr;
-        const Expression* right = nullptr;
+        Expression* right = nullptr;
 
-        UnaryExpression(const Token* operation, const Expression* right);
+        UnaryExpression(const Token* operation, Expression* right);
 
-        void Accept(ExpressionVisitor *visitor) override;
+        std::any Accept(ExpressionVisitor *visitor) override;
     };
 }
 

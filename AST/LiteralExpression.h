@@ -6,12 +6,13 @@
 #include <variant>
 #include "Expression.h"
 #include "ExpressionVisitor.h"
+#include "../Conversions/String.h"
 
 namespace Noble::Compiler::AST
 {
     struct LiteralExpression final : Expression
     {
-        std::variant<std::string, std::float64_t, bool> as;
+        std::variant<std::string, std::float64_t, bool> data;
 
         enum Type
         {
@@ -21,9 +22,16 @@ namespace Noble::Compiler::AST
             Null
         };
 
-        Type type = Null;
+        Type type;
 
-        void Accept(ExpressionVisitor *visitor) override;
+        LiteralExpression();
+        explicit LiteralExpression(const std::string& value);
+        explicit LiteralExpression(std::float64_t value);
+        explicit LiteralExpression(bool value);
+
+        std::any Accept(ExpressionVisitor *visitor) override;
+
+        std::string ToString();
     };
 }
 

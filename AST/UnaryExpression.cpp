@@ -2,13 +2,13 @@
 
 namespace Noble::Compiler::AST
 {
-    UnaryExpression::UnaryExpression(const Token* operation, const Expression* right) :
+    UnaryExpression::UnaryExpression(const Token* operation, Expression* right) :
         operation(operation),
         right(right)
     {}
 
-    void UnaryExpression::Accept(ExpressionVisitor* visitor)
+    std::any UnaryExpression::Accept(ExpressionVisitor* visitor)
     {
-        visitor->Visit(this);
+        return visitor->Visit(this);
     }
 }

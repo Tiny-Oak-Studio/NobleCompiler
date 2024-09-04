@@ -13,4 +13,16 @@ namespace Noble::Compiler
         firstCharacter(&errorMessage.front()),
         lastCharacter(&errorMessage.back())
     {}
+
+    std::string Token::ToString() const
+    {
+        return { firstCharacter, static_cast<std::string::size_type>(lastCharacter - firstCharacter) };
+    }
+
+    std::float64_t Token::ToFloat() const
+    {
+        return std::stod(ToString());
+    }
+
+
 } // Noble::Compiler
