@@ -43,14 +43,18 @@ add_executable(
         AST/Printer.h
         Exceptions/ParseException.cpp
         Exceptions/ParseException.h
+        Conversions/String.cpp
+        Conversions/String.h
+        Bytecode/BytecodeVisitor.cpp
+        Bytecode/BytecodeVisitor.h
         NobleCompilerTests/NobleCompilerTests.cpp
         NobleCompilerTests/LexerTests.cpp
         NobleCompilerTests/CompilerTests.cpp
         NobleCompilerTests/ASTTests.cpp
         NobleCompilerTests/ParserTests.cpp
-        Conversions/String.cpp
-        Conversions/String.h
+        NobleCompilerTests/BytecodeVisitorTests.cpp
 )
+
 target_link_libraries(
         NobleCompilerTests
         GTest::gtest_main
