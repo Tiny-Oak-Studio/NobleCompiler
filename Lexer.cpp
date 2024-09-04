@@ -2,12 +2,15 @@
 
 namespace Noble::Compiler
 {
-    std::vector<Token> Lexer::Lex(const std::string &NGPLSource)
+    std::vector<Token> Lexer::Lex(const char* NGPLSource)
     {
         std::vector<Token> tokens;
-        startScanHead = currentScanHead = &NGPLSource[0];
+        startScanHead = currentScanHead = NGPLSource;
 
-        Token token;
+        SkipWhitespace();
+        Token token = ReadToken();
+        tokens.emplace_back(token);
+
         while (token.type != Token::Type::EndOfFile)
         {
             SkipWhitespace();
@@ -54,7 +57,12 @@ namespace Noble::Compiler
 
     Token Lexer::MakeToken(const Token::Type type) const
     {
-        return { type, startScanHead, currentScanHead };
+        Token token;
+        token.type = type;
+        token.firstCharacter = startScanHead;
+        token.length = currentScanHead - startScanHead;
+        return token;
+        //return { type, startScanHead, static_cast<std::size_t>(currentScanHead - startScanHead) };
     }
 
     char Lexer::ReadCharacter()
@@ -120,13 +128,13 @@ namespace Noble::Compiler
 
     Token Lexer::ReadNumber()
     {
-        while (std::isdigit(Peek())) ReadCharacter();
+        while (IsDigit(Peek())) ReadCharacter();
 
         //Check for decimal part
-        if (Peek() == '.' and std::isdigit(Peek(1)))
+        if (Peek() == '.' and IsDigit(Peek(1)))
         {
             ReadCharacter(); //Eat the point
-            while (std::isdigit(Peek())) ReadCharacter(); //Eat all decimal digits
+            while (IsDigit(Peek())) ReadCharacter(); //Eat all decimal digits
         }
 
         return MakeToken(Token::Type::Number);
@@ -192,4 +200,10 @@ namespace Noble::Compiler
         }
         return Token::Identifier;
     }
+
+    bool Lexer::IsDigit(const char c)
+    {
+        return c >= '0' and c <= '9';
+    }
+
 } // Noble::Compiler

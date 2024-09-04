@@ -10,15 +10,18 @@ namespace Noble::Compiler
         expressions.clear();
         currentToken = 0;
 
+        return Expression();
+
+        /*
         try
         {
             return Expression();
         }
         catch (std::exception& e)
         {
-            std::cout << e.what() << "\n";
+            std::cout << "ERROR: " << e.what() << "\n";
             return nullptr;
-        }
+        }*/
     }
 
     const Token* Parser::Peek(const int offset) const

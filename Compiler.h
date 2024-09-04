@@ -3,6 +3,7 @@
 
 #include <string>
 #include "Lexer.h"
+#include "Parser.h"
 
 namespace Noble::Compiler
 {
@@ -11,6 +12,8 @@ namespace Noble::Compiler
     public:
         ///@ brief Compiles Noble General-Purpose Language into Noble Assembly-Language
         bool Compile(const std::string& NGPLSource);
+    private:
+        std::string source;
     };
 }
 

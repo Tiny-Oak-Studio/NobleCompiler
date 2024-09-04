@@ -3,6 +3,7 @@
 
 #include <stdfloat>
 #include <string>
+#include "Conversions/String.h"
 
 namespace Noble::Compiler
 {
@@ -35,10 +36,10 @@ namespace Noble::Compiler
         Type type = None;
 
         const char* firstCharacter = nullptr;
-        const char* lastCharacter = nullptr;
+        std::size_t length = 0;
 
         Token() = default;
-        Token(Type type, const char* firstChar, const char* lastChar);
+        Token(Type type, const char* firstChar, std::size_t length);
         explicit Token(const std::string& errorMessage);
 
         [[nodiscard]] std::string ToString() const;

@@ -23,14 +23,20 @@ namespace Noble::Compiler
     public:
         /**
          * @brief Scans the given NGPL string and produces the appropriate list of Tokens
-         * @param NGPLSource A string containing NGPL source code.
+         * @param NGPLSource A c-style string containing NGPL source code.
          * @return An ordered list of Tokens corresponding to the Tokens detected in the provided source.
+         * @warning If you use this class by itself, MAKE SURE the lifetime of the NGPLSource string outlives the Lexer.
          *
-         * This function produces the entire token stream at once and stuffs in a vector. This
+         * @note The Lexer does not take ownership of the NGPLSource string, and expects the validity of the pointer
+         * is maintained throughout the lifetime of the Lexer by whatever object owns the NGPLSource string. At the moment
+         * the Compiler class is the owner of the source string during full pipeline compilation because we can guarantee
+         * the Compiler object will have a life-time greater or equal to the lifetime of any Lexers it uses.
+         *
+         * @note This function produces the entire token stream at once and stuffs in a vector. This
          * *may* be a problem for very large sources that require a lot of memory but there is
          * no plan to address this until it becomes necessary.
          */
-        [[nodiscard]] std::vector<Token> Lex(const std::string& NGPLSource);
+        [[nodiscard]] std::vector<Token> Lex(const char* NGPLSource);
     protected:
         /**
          * @brief Produces the next Token in the stream for the provided source.
@@ -51,8 +57,7 @@ namespace Noble::Compiler
         /**
          * @brief Reads the next character in the source sequence.
          * @return The next character in the sequence.
-         *
-         * Side effect: This moves the current scan-head forward by one character.
+         * @note  This moves the current scan-head forward by one character.
          */
         char ReadCharacter();
 
@@ -66,10 +71,9 @@ namespace Noble::Compiler
          * @brief Checks if the next character in the source sequence matches the given char.
          * @param c The character to match against the next character in the source sequence.
          * @return True if the current scan-head points to a character matching the given character, otherwise false.
+         * @note Moves the current scan-head forward if a match is detected.
          *
-         * Side effect: Moves the current scan-head forward if a match is detected.
-         *
-         * No discard: If you want to move the current scan-head forward by a character, use Lexer::ReadCharacter
+         * @note If you want to move the current scan-head forward by a character, use Lexer::ReadCharacter
          * instead - This method is intended only to match multi-character tokens and so the return value
          * should not be discarded.
          */
@@ -102,9 +106,11 @@ namespace Noble::Compiler
         /// @brief Checks if a sequence matches a NGPL keyword
         [[nodiscard]] Token::Type KeywordCheck(int offset, const std::string& rest, Token::Type type) const;
 
+        [[nodiscard]] static bool IsDigit(char c) ;
+
         const char* startScanHead = nullptr;
         const char* currentScanHead = nullptr;
     };
-} // Noble::Compiler
+}
 
 #endif //NOBLE_COMPILER_LEXER_H_INCLUDED
