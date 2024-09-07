@@ -47,6 +47,12 @@ add_executable(
         Conversions/String.h
         Bytecode/BytecodeVisitor.cpp
         Bytecode/BytecodeVisitor.h
+        NobleCore/Frame.cpp
+        NobleCore/Frame.h
+        NobleCore/Translation.cpp
+        NobleCore/Translation.h
+        NobleCore/Value.cpp
+        NobleCore/Value.h
         NobleCompilerTests/NobleCompilerTests.cpp
         NobleCompilerTests/LexerTests.cpp
         NobleCompilerTests/CompilerTests.cpp

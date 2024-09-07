@@ -11,12 +11,12 @@ namespace Noble::Compiler::AST
         type(Type::String)
     {}
 
-    LiteralExpression::LiteralExpression(std::float64_t value) :
+    LiteralExpression::LiteralExpression(const Core::Runtime::FloatType value) :
         data(value),
         type(Type::Number)
     {}
 
-    LiteralExpression::LiteralExpression(bool value) :
+    LiteralExpression::LiteralExpression(const bool value) :
         data(value),
         type(Type::Boolean)
     {}
@@ -32,10 +32,9 @@ namespace Noble::Compiler::AST
         {
             case Null:    return "null";
             case String:  return std::get<std::string>(data);
-            case Number:  return Conversions::ToString(std::get<std::float64_t>(data));
+            case Number:  return Conversions::ToString(std::get<Core::Runtime::FloatType>(data));
             case Boolean: return std::get<bool>(data) ? "true" : "false";
             default: return "";
         }
     }
-
 }

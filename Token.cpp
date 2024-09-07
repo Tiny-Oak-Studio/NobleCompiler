@@ -1,7 +1,5 @@
 #include "Token.h"
 
-#include <iostream>
-
 namespace Noble::Compiler
 {
     Token::Token(const Type type, const char* firstChar, const std::size_t length) :
@@ -21,10 +19,8 @@ namespace Noble::Compiler
         return { firstCharacter, length };
     }
 
-    std::float64_t Token::ToFloat() const
+    Core::Runtime::FloatType Token::ToFloat() const
     {
-        return Conversions::FromString<std::float64_t>(ToString());
+        return Conversions::FromString<Core::Runtime::FloatType>(ToString());
     }
-
-
-} // Noble::Compiler
+}

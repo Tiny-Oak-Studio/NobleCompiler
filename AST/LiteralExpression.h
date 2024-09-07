@@ -1,5 +1,5 @@
-#ifndef LITERALEXPRESSION_H
-#define LITERALEXPRESSION_H
+#ifndef LITERALEXPRESSION_H_INCLUDED
+#define LITERALEXPRESSION_H_INCLUDED
 
 #include <string>
 #include <stdfloat>
@@ -7,12 +7,13 @@
 #include "Expression.h"
 #include "ExpressionVisitor.h"
 #include "../Conversions/String.h"
+#include "../NobleCore/Value.h"
 
 namespace Noble::Compiler::AST
 {
     struct LiteralExpression final : Expression
     {
-        std::variant<std::string, std::float64_t, bool> data;
+        std::variant<std::string, Core::Runtime::FloatType, bool> data;
 
         enum Type
         {
@@ -25,8 +26,9 @@ namespace Noble::Compiler::AST
         Type type;
 
         LiteralExpression();
+
         explicit LiteralExpression(const std::string& value);
-        explicit LiteralExpression(std::float64_t value);
+        explicit LiteralExpression(Noble::Core::Runtime::FloatType value);
         explicit LiteralExpression(bool value);
 
         std::any Accept(ExpressionVisitor *visitor) override;
@@ -35,4 +37,4 @@ namespace Noble::Compiler::AST
     };
 }
 
-#endif //LITERALEXPRESSION_H
+#endif //LITERALEXPRESSION_H_INCLUDED

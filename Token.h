@@ -1,9 +1,9 @@
 #ifndef TOKEN_H_INCLUDED
 #define TOKEN_H_INCLUDED
 
-#include <stdfloat>
 #include <string>
 #include "Conversions/String.h"
+#include "NobleCore/Value.h"
 
 namespace Noble::Compiler
 {
@@ -43,8 +43,8 @@ namespace Noble::Compiler
         explicit Token(const std::string& errorMessage);
 
         [[nodiscard]] std::string ToString() const;
-        [[nodiscard]] std::float64_t ToFloat() const;
+        [[nodiscard]] Core::Runtime::FloatType ToFloat() const;
     };
-} // Noble::Compiler
+}
 
 #endif //TOKEN_H_INCLUDED
