@@ -25,12 +25,12 @@ TEST(BytecodeVisitor, Startup)
     const std::vector<Token> tokens = lexer.Lex(testString.c_str());
 
     Parser parser;
-    AST::Expression* expr = parser.Parse(tokens);
+    std::unique_ptr<AST::Expression> expr = parser.Parse(tokens);
 
     Frame frame;
 
     BytecodeVisitor bytecodeVisitor;
-    bytecodeVisitor.GenerateOps(expr, frame);
+    bytecodeVisitor.GenerateOps(expr.get(), frame);
 
     EXPECT_NE(frame.NumOps(), 0);
     EXPECT_EQ(frame.ReadOp(0), Op::Code::Constant);

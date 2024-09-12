@@ -15,11 +15,11 @@ namespace Noble::Compiler::AST
 
     std::any Printer::Visit(BinaryExpression* binaryExpression) {
         return Parenthesize(binaryExpression->operation->ToString(),
-                            { binaryExpression->left, binaryExpression->right });
+                            { binaryExpression->left.get(), binaryExpression->right.get() });
     }
 
     std::any Printer::Visit(GroupingExpression* groupingExpression) {
-        return Parenthesize("group", { groupingExpression->expression });
+        return Parenthesize("group", { groupingExpression->expression.get() });
     }
 
     std::any Printer::Visit(LiteralExpression* literalExpression)
@@ -30,7 +30,7 @@ namespace Noble::Compiler::AST
 
     std::any Printer::Visit(UnaryExpression* unaryExpression)
     {
-        return Parenthesize(unaryExpression->operation->ToString(), { unaryExpression->right } );
+        return Parenthesize(unaryExpression->operation->ToString(), { unaryExpression->right.get() } );
     }
 
     std::any Printer::Parenthesize(const std::string& name, const std::initializer_list<Expression*> expressions)

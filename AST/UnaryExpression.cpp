@@ -2,9 +2,9 @@
 
 namespace Noble::Compiler::AST
 {
-    UnaryExpression::UnaryExpression(const Token* operation, Expression* right) :
+    UnaryExpression::UnaryExpression(const Token* operation, std::unique_ptr<Expression>& right) :
         operation(operation),
-        right(right)
+        right(std::move(right))
     {}
 
     std::any UnaryExpression::Accept(ExpressionVisitor* visitor)

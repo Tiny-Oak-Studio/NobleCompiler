@@ -28,7 +28,7 @@ namespace Noble::Compiler::AST
         LiteralExpression();
 
         explicit LiteralExpression(const std::string& value);
-        explicit LiteralExpression(Noble::Core::Runtime::FloatType value);
+        explicit LiteralExpression(Core::Runtime::FloatType value);
         explicit LiteralExpression(bool value);
 
         std::any Accept(ExpressionVisitor *visitor) override;

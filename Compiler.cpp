@@ -1,5 +1,8 @@
 #include "Compiler.h"
 
+#include "Bytecode/BytecodeVisitor.h"
+#include "Optimisations/ConstantRollerVisitor.h"
+
 namespace Noble::Compiler
 {
     bool Compiler::Compile(const std::string& NGPLSource)
@@ -10,8 +13,18 @@ namespace Noble::Compiler
 
         Lexer lexer;
         Parser parser;
+        Core::Frame frame;
 
-        parser.Parse(lexer.Lex(source.c_str()));
+        Optimisations::ConstantRollerVisitor constantRollerVisitor;
+        Bytecode::BytecodeVisitor bytecodeVisitor;
+
+        std::unique_ptr<AST::Expression> AST = parser.Parse(lexer.Lex(source.c_str()));
+
+        constantRollerVisitor.RollConstants(AST.get());
+        bytecodeVisitor.GenerateOps(AST.get(), frame);
+
+        std::cout << "\n" << source;
+        std::cout << "\nNum: " << frame.NumOps() << "\n";
 
         return false;
     }

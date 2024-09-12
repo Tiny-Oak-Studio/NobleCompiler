@@ -16,12 +16,12 @@ TEST(Parser, SingleNumberLiteral)
     EXPECT_EQ(tokens[0].type, Token::Type::Number);
 
     Parser parser;
-    AST::Expression* expr = parser.Parse(tokens);
+    std::unique_ptr<AST::Expression> expr = parser.Parse(tokens);
 
     EXPECT_NE(expr, nullptr);
 
     AST::Printer printer;
-    EXPECT_EQ(printer.Print(expr), "1");
+    EXPECT_EQ(printer.Print(expr.get()), "1");
 }
 
 
@@ -32,12 +32,12 @@ TEST(Parser, SingleLargeNumberLiteral)
     const std::vector<Token> tokens = lexer.Lex(testString.c_str());
 
     Parser parser;
-    AST::Expression* expr = parser.Parse(tokens);
+    std::unique_ptr<AST::Expression> expr = parser.Parse(tokens);
 
     EXPECT_NE(expr, nullptr);
 
     AST::Printer printer;
-    EXPECT_EQ(printer.Print(expr), "1.23736e+21");
+    EXPECT_EQ(printer.Print(expr.get()), "1.23736e+21");
 }
 
 TEST(Parser, UnaryAndLiteral)
@@ -47,11 +47,11 @@ TEST(Parser, UnaryAndLiteral)
     const std::vector<Token> tokens = lexer.Lex(testString.c_str());
 
     Parser parser;
-    AST::Expression* expr = parser.Parse(tokens);
+    std::unique_ptr<AST::Expression> expr = parser.Parse(tokens);
     EXPECT_NE(expr, nullptr);
 
     AST::Printer printer;
-    EXPECT_EQ(printer.Print(expr), "(- 1)");
+    EXPECT_EQ(printer.Print(expr.get()), "(- 1)");
 }
 
 TEST(Parser, BinaryAdd)
@@ -61,11 +61,11 @@ TEST(Parser, BinaryAdd)
     const std::vector<Token> tokens = lexer.Lex(testString.c_str());
 
     Parser parser;
-    AST::Expression* expr = parser.Parse(tokens);
+    std::unique_ptr<AST::Expression> expr = parser.Parse(tokens);
     EXPECT_NE(expr, nullptr);
 
     AST::Printer printer;
-    EXPECT_EQ(printer.Print(expr), "(* 2 4)");
+    EXPECT_EQ(printer.Print(expr.get()), "(* 2 4)");
 }
 
 TEST(Parser, TwoTerms)
@@ -75,11 +75,11 @@ TEST(Parser, TwoTerms)
     const std::vector<Token> tokens = lexer.Lex(testString.c_str());
 
     Parser parser;
-    AST::Expression* expr = parser.Parse(tokens);
+    std::unique_ptr<AST::Expression> expr = parser.Parse(tokens);
     EXPECT_NE(expr, nullptr);
 
     AST::Printer printer;
-    EXPECT_EQ(printer.Print(expr), "(+ (* 2 4) (* 5 2))");
+    EXPECT_EQ(printer.Print(expr.get()), "(+ (* 2 4) (* 5 2))");
 }
 
 TEST(Parser, Grouping)
@@ -89,11 +89,11 @@ TEST(Parser, Grouping)
     const std::vector<Token> tokens = lexer.Lex(testString.c_str());
 
     Parser parser;
-    AST::Expression* expr = parser.Parse(tokens);
+    std::unique_ptr<AST::Expression> expr = parser.Parse(tokens);
     EXPECT_NE(expr, nullptr);
 
     AST::Printer printer;
-    EXPECT_EQ(printer.Print(expr), "(* 2 (group (+ 3 2)))");
+    EXPECT_EQ(printer.Print(expr.get()), "(* 2 (group (+ 3 2)))");
 }
 
 TEST(Parser, DecimalUnaryTermsWithGrouping)
@@ -103,9 +103,9 @@ TEST(Parser, DecimalUnaryTermsWithGrouping)
     const std::vector<Token> tokens = lexer.Lex(testString.c_str());
 
     Parser parser;
-    AST::Expression* expr = parser.Parse(tokens);
+    std::unique_ptr<AST::Expression> expr = parser.Parse(tokens);
     EXPECT_NE(expr, nullptr);
 
     AST::Printer printer;
-    EXPECT_EQ(printer.Print(expr), "(* 3442.46 (group (+ 3.3 2.111)))");
+    EXPECT_EQ(printer.Print(expr.get()), "(* 3442.46 (group (+ 3.3 2.111)))");
 }

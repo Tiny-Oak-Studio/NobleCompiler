@@ -4,13 +4,12 @@
 
 namespace Noble::Compiler
 {
-    AST::Expression* Parser::Parse(const std::vector<Token>& tokens)
+    std::unique_ptr<AST::Expression> Parser::Parse(const std::vector<Token>& tokens)
     {
         this->tokens = tokens;
-        expressions.clear();
         currentToken = 0;
 
-        return Expression();
+        return std::move(Expression());
 
         /*
         try
@@ -93,108 +92,97 @@ namespace Noble::Compiler
         }
     }
 
-    AST::Expression* Parser::Expression()
+    std::unique_ptr<AST::Expression> Parser::Expression()
     {
         return Equality();
     }
 
-    AST::Expression* Parser::Equality()
+    std::unique_ptr<AST::Expression> Parser::Equality()
     {
-        AST::Expression* expr = Comparison();
+        std::unique_ptr<AST::Expression> expr = Comparison();
         while (Match({Token::Type::BangEqual, Token::Type::EqualEqual}))
         {
             const Token* operation = Previous();
-            AST::Expression* right = Comparison();
-            expressions.emplace_back(std::make_unique<AST::BinaryExpression>(expr, operation, right));
-            expr = expressions.back().get();
+            std::unique_ptr<AST::Expression> right = Comparison();
+            expr = std::make_unique<AST::BinaryExpression>(expr, operation, right);
         }
         return expr;
     }
 
-    AST::Expression* Parser::Comparison()
+    std::unique_ptr<AST::Expression> Parser::Comparison()
     {
-        AST::Expression* expr = Term();
+        std::unique_ptr<AST::Expression> expr = Term();
         while (Match({Token::Type::Greater, Token::Type::GreaterEqual, Token::Type::Less, Token::Type::LessEqual}))
         {
             const Token* operation = Previous();
-            AST::Expression* right = Term();
-            expressions.emplace_back(std::make_unique<AST::BinaryExpression>(expr, operation, right));
-            return expressions.back().get();
+            std::unique_ptr<AST::Expression> right = Term();
+            return std::make_unique<AST::BinaryExpression>(expr, operation, right);
         }
         return expr;
     }
 
-    AST::Expression* Parser::Term()
+    std::unique_ptr<AST::Expression> Parser::Term()
     {
-        AST::Expression* expr = Factor();
+        std::unique_ptr<AST::Expression> expr = Factor();
         while (Match({Token::Type::Plus, Token::Type::Minus}))
         {
             const Token* operation = Previous();
-            AST::Expression* right = Factor();
-            expressions.emplace_back(std::make_unique<AST::BinaryExpression>(expr, operation, right));
-            return expressions.back().get();
+            std::unique_ptr<AST::Expression> right = Factor();
+            return std::make_unique<AST::BinaryExpression>(expr, operation, right);
         }
         return expr;
     }
 
-    AST::Expression* Parser::Factor()
+    std::unique_ptr<AST::Expression> Parser::Factor()
     {
-        AST::Expression* expr = Unary();
+        std::unique_ptr<AST::Expression> expr = Unary();
         while (Match({Token::Type::Slash, Token::Type::Star}))
         {
             const Token* operation = Previous();
-            AST::Expression* right = Unary();
-            expressions.emplace_back(std::make_unique<AST::BinaryExpression>(expr, operation, right));
-            return expressions.back().get();
+            std::unique_ptr<AST::Expression> right = Unary();
+            return std::make_unique<AST::BinaryExpression>(expr, operation, right);
         }
         return expr;
     }
 
-    AST::Expression* Parser::Unary()
+    std::unique_ptr<AST::Expression> Parser::Unary()
     {
         if (Match({Token::Type::Bang, Token::Type::Minus}))
         {
             const Token* operation = Previous();
-            AST::Expression* right = Unary();
-            expressions.emplace_back(std::make_unique<AST::UnaryExpression>(operation, right));
-            return expressions.back().get();
+            std::unique_ptr<AST::Expression> right = Unary();
+            return std::make_unique<AST::UnaryExpression>(operation, right);
         }
         return Primary();
     }
 
-    AST::Expression* Parser::Primary()
+    std::unique_ptr<AST::Expression> Parser::Primary()
     {
         if (Match({Token::Type::False}))
         {
-            expressions.emplace_back(std::make_unique<AST::LiteralExpression>(false));
-            return expressions.back().get();
+            return std::make_unique<AST::LiteralExpression>(false);
         }
         if (Match({Token::Type::True}))
         {
-            expressions.emplace_back(std::make_unique<AST::LiteralExpression>(true));
-            return expressions.back().get();
+            return std::make_unique<AST::LiteralExpression>(true);
         }
         if (Match({Token::Type::Null}))
         {
-            expressions.emplace_back(std::make_unique<AST::LiteralExpression>());
-            return expressions.back().get();
+            return std::make_unique<AST::LiteralExpression>();
         }
         if (Match({Token::Type::Number}))
         {
-            expressions.emplace_back(std::make_unique<AST::LiteralExpression>(Previous()->ToFloat()));
-            return expressions.back().get();
+            return std::make_unique<AST::LiteralExpression>(Previous()->ToFloat());
         }
         if (Match({Token::Type::String}))
         {
-            expressions.emplace_back(std::make_unique<AST::LiteralExpression>(Previous()->ToString()));
-            return expressions.back().get();
+            return std::make_unique<AST::LiteralExpression>(Previous()->ToString());
         }
         if (Match({Token::Type::LeftParen}))
         {
-            AST::Expression* expr = Expression();
+            std::unique_ptr<AST::Expression> expr = Expression();
             Consume(Token::Type::RightParen, "Expecting ')' after expression.");
-            expressions.emplace_back(std::make_unique<AST::GroupingExpression>(expr));
-            return expressions.back().get();
+            return std::make_unique<AST::GroupingExpression>(expr);
         }
         return nullptr;
     }

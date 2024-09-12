@@ -13,10 +13,9 @@ namespace Noble::Compiler
     class Parser
     {
     public:
-        AST::Expression* Parse(const std::vector<Token>& tokens);
+        std::unique_ptr<AST::Expression> Parse(const std::vector<Token>& tokens);
     protected:
         std::vector<Token> tokens;
-        std::vector<std::unique_ptr<AST::Expression>> expressions;
         std::size_t currentToken = 0;
 
         [[nodiscard]] const Token* Peek(int offset = 0) const;
@@ -29,13 +28,13 @@ namespace Noble::Compiler
         const Token* Consume(Token::Type type, const std::string& message);
         void Synchronise();
 
-        AST::Expression* Expression();
-        AST::Expression* Equality();
-        AST::Expression* Comparison();
-        AST::Expression* Term();
-        AST::Expression* Factor();
-        AST::Expression* Unary();
-        AST::Expression* Primary();
+        std::unique_ptr<AST::Expression> Expression();
+        std::unique_ptr<AST::Expression> Equality();
+        std::unique_ptr<AST::Expression> Comparison();
+        std::unique_ptr<AST::Expression> Term();
+        std::unique_ptr<AST::Expression> Factor();
+        std::unique_ptr<AST::Expression> Unary();
+        std::unique_ptr<AST::Expression> Primary();
     };
 } // Noble::Compiler
 

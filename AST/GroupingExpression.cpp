@@ -2,8 +2,8 @@
 
 namespace Noble::Compiler::AST
 {
-    GroupingExpression::GroupingExpression(Expression* expression) :
-        expression(expression)
+    GroupingExpression::GroupingExpression(std::unique_ptr<Expression>& expression) :
+        expression(std::move(expression))
     {}
 
     std::any GroupingExpression::Accept(ExpressionVisitor* visitor)
