@@ -8,6 +8,15 @@
 
 using namespace Noble::Compiler::Bytecode;
 using namespace Noble::Compiler;
+using namespace Noble::Core;
+
+TEST(BytecodeVisitor, Empty)
+{
+    Frame frame;
+    BytecodeVisitor bytecodeVisitor;
+    bytecodeVisitor.GenerateOps(nullptr, frame);
+    EXPECT_EQ(frame.NumOps(), 0);
+}
 
 TEST(BytecodeVisitor, Startup)
 {
@@ -18,8 +27,19 @@ TEST(BytecodeVisitor, Startup)
     Parser parser;
     AST::Expression* expr = parser.Parse(tokens);
 
-    Noble::Core::Frame frame;
+    Frame frame;
 
     BytecodeVisitor bytecodeVisitor;
     bytecodeVisitor.GenerateOps(expr, frame);
+
+    EXPECT_NE(frame.NumOps(), 0);
+    EXPECT_EQ(frame.ReadOp(0), Op::Code::Constant);
+    EXPECT_EQ(frame.ReadOp(5), Op::Code::Constant);
+    EXPECT_EQ(frame.ReadOp(10), Op::Code::Divide);
+    EXPECT_EQ(frame.ReadOp(11), Op::Code::Constant);
+    EXPECT_EQ(frame.ReadOp(16), Op::Code::Constant);
+    EXPECT_EQ(frame.ReadOp(21), Op::Code::Constant);
+    EXPECT_EQ(frame.ReadOp(26), Op::Code::Add);
+    EXPECT_EQ(frame.ReadOp(27), Op::Code::Multiply);
+    EXPECT_EQ(frame.ReadOp(28), Op::Code::Add);
 }

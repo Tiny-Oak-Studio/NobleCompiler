@@ -9,6 +9,8 @@ namespace Noble::Compiler::Bytecode
 {
     void BytecodeVisitor::GenerateOps(AST::Expression* expression, Core::Frame& frame)
     {
+        if (expression == nullptr) return;
+
         this->frame = &frame;
         expression->Accept(this);
     }
@@ -24,6 +26,7 @@ namespace Noble::Compiler::Bytecode
             case Token::Type::Minus: frame->WriteOp(Core::Op::Code::Subtract); break;
             case Token::Type::Plus:  frame->WriteOp(Core::Op::Code::Add);      break;
             case Token::Type::Star:  frame->WriteOp(Core::Op::Code::Multiply); break;
+            case Token::Type::Slash: frame->WriteOp(Core::Op::Code::Divide);   break;
             default: break;
         }
         return 0;
@@ -40,9 +43,9 @@ namespace Noble::Compiler::Bytecode
         //std::cout << literalExpression->ToString() << " ";
         switch (literalExpression->type)
         {
-            case AST::LiteralExpression::Type::Boolean: frame->AddConstant(ToValue(std::get<bool>(literalExpression->data))); break;
-            case AST::LiteralExpression::Type::Null:    frame->AddConstant(NullValue); break;
-            case AST::LiteralExpression::Type::Number:  frame->AddConstant(ToValue(std::get<FloatType>(literalExpression->data))); break;
+            case AST::LiteralExpression::Type::Boolean: frame->WriteConstant(ToValue(std::get<bool>(literalExpression->data))); break;
+            case AST::LiteralExpression::Type::Null:    frame->WriteConstant(NullValue); break;
+            case AST::LiteralExpression::Type::Number:  frame->WriteConstant(ToValue(std::get<FloatType>(literalExpression->data))); break;
             case AST::LiteralExpression::Type::String:  break;
         }
         return 0;
