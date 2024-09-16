@@ -10,11 +10,11 @@ namespace Noble::Compiler::AST
 {
     struct BinaryExpression final : Expression
     {
-        std::unique_ptr<Expression> left = nullptr;
+        ExprPtr left = nullptr;
         const Token* operation = nullptr;
-        std::unique_ptr<Expression> right = nullptr;
+        ExprPtr right = nullptr;
 
-        BinaryExpression(std::unique_ptr<Expression>& left, const Token* operation, std::unique_ptr<Expression>& right);
+        BinaryExpression(ExprPtr& left, const Token* operation, ExprPtr& right);
 
         std::any Accept(ExpressionVisitor *visitor) override;
     };

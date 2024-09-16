@@ -2,11 +2,13 @@
 
 namespace Noble::Compiler::AST
 {
-    BinaryExpression::BinaryExpression(std::unique_ptr<Expression>& left, const Token* operation, std::unique_ptr<Expression>& right) :
+    BinaryExpression::BinaryExpression(ExprPtr& left, const Token* operation, ExprPtr& right) :
         left(std::move(left)),
         operation(operation),
         right(std::move(right))
-    {}
+    {
+        ExpressionType = Type::Binary;
+    }
 
     std::any BinaryExpression::Accept(ExpressionVisitor* visitor)
     {

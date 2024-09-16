@@ -1,7 +1,7 @@
 #include "Compiler.h"
 
 #include "Bytecode/BytecodeVisitor.h"
-#include "Optimisations/ConstantRollerVisitor.h"
+#include "Optimisations/ConstantFoldingVisitor.h"
 
 namespace Noble::Compiler
 {
@@ -15,17 +15,14 @@ namespace Noble::Compiler
         Parser parser;
         Core::Frame frame;
 
-        Optimisations::ConstantRollerVisitor constantRollerVisitor;
+        Optimisations::ConstantFoldingVisitor constantRollerVisitor;
         Bytecode::BytecodeVisitor bytecodeVisitor;
 
         std::unique_ptr<AST::Expression> AST = parser.Parse(lexer.Lex(source.c_str()));
 
-        constantRollerVisitor.RollConstants(AST.get());
+        constantRollerVisitor.FoldConstants(AST);
         bytecodeVisitor.GenerateOps(AST.get(), frame);
 
-        std::cout << "\n" << source;
-        std::cout << "\nNum: " << frame.NumOps() << "\n";
-
-        return false;
+        return true;
     }
 }

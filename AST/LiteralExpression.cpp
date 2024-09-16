@@ -4,22 +4,30 @@ namespace Noble::Compiler::AST
 {
     LiteralExpression::LiteralExpression() :
         type(Type::Null)
-    {}
+    {
+        ExpressionType = Expression::Type::Literal;
+    }
 
     LiteralExpression::LiteralExpression(const std::string &value) :
         data(value),
         type(Type::String)
-    {}
+    {
+        ExpressionType = Expression::Type::Literal;
+    }
 
     LiteralExpression::LiteralExpression(const Core::Runtime::FloatType value) :
         data(value),
         type(Type::Number)
-    {}
+    {
+        ExpressionType = Expression::Type::Literal;
+    }
 
     LiteralExpression::LiteralExpression(const bool value) :
         data(value),
         type(Type::Boolean)
-    {}
+    {
+        ExpressionType = Expression::Type::Literal;
+    }
 
     std::any LiteralExpression::Accept(ExpressionVisitor* visitor)
     {

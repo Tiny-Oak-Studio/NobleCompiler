@@ -61,8 +61,8 @@ add_executable(
         NobleCompilerTests/BytecodeVisitorTests.cpp
         Debug/FramePrinter.cpp
         Debug/FramePrinter.h
-        Optimisations/ConstantRollerVisitor.cpp
-        Optimisations/ConstantRollerVisitor.h
+        Optimisations/ConstantFoldingVisitor.cpp
+        Optimisations/ConstantFoldingVisitor.h
 )
 
 target_link_libraries(

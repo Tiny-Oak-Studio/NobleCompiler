@@ -9,9 +9,9 @@ namespace Noble::Compiler::AST
 {
     struct GroupingExpression final : Expression
     {
-        std::unique_ptr<Expression> expression = nullptr;
+        ExprPtr expression = nullptr;
 
-        GroupingExpression(std::unique_ptr<Expression>& expression);
+        GroupingExpression(ExprPtr& expression);
 
         std::any Accept(ExpressionVisitor *visitor) override;
     };

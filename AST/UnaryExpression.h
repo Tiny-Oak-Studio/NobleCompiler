@@ -11,9 +11,9 @@ namespace Noble::Compiler::AST
     struct UnaryExpression final : Expression
     {
         const Token* operation = nullptr;
-        std::unique_ptr<Expression> right = nullptr;
+        ExprPtr right = nullptr;
 
-        UnaryExpression(const Token* operation, std::unique_ptr<Expression>& right);
+        UnaryExpression(const Token* operation, ExprPtr& right);
 
         std::any Accept(ExpressionVisitor *visitor) override;
     };
