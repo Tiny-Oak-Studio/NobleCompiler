@@ -43,3 +43,20 @@ TEST(BytecodeVisitor, Startup)
     EXPECT_EQ(frame.ReadOp(27), Op::Code::Multiply);
     EXPECT_EQ(frame.ReadOp(28), Op::Code::Add);
 }
+
+TEST(BytecodeVisitor, NoDecimals)
+{
+    Lexer lexer;
+    const std::string testString = "(1 + 1) / 2 * 2 + 1 ";
+    const std::vector<Token> tokens = lexer.Lex(testString.c_str());
+
+    Parser parser;
+    std::unique_ptr<AST::Expression> expr = parser.Parse(tokens);
+
+    Frame frame;
+
+    BytecodeVisitor bytecodeVisitor;
+    bytecodeVisitor.GenerateOps(expr.get(), frame);
+
+    EXPECT_EQ(frame.NumConstants(), 5);
+}

@@ -128,7 +128,7 @@ namespace Noble::Compiler
         {
             const Token* operation = Previous();
             std::unique_ptr<AST::Expression> right = Factor();
-            return std::make_unique<AST::BinaryExpression>(expr, operation, right);
+            expr = std::make_unique<AST::BinaryExpression>(expr, operation, right);
         }
         return expr;
     }
@@ -140,7 +140,7 @@ namespace Noble::Compiler
         {
             const Token* operation = Previous();
             std::unique_ptr<AST::Expression> right = Unary();
-            return std::make_unique<AST::BinaryExpression>(expr, operation, right);
+            expr = std::make_unique<AST::BinaryExpression>(expr, operation, right);
         }
         return expr;
     }

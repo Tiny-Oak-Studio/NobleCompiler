@@ -107,5 +107,19 @@ TEST(Parser, DecimalUnaryTermsWithGrouping)
     EXPECT_NE(expr, nullptr);
 
     AST::Printer printer;
-    EXPECT_EQ(printer.Print(expr.get()), "(* 3442.46 (group (+ 3.3 2.111)))");
+    EXPECT_EQ(printer.Print(expr.get()), "(* (* 3442.46 (group (+ 3.3 2.111))) 33)");
+}
+
+TEST(Parser, NoDecimalsMultipleOperations)
+{
+    Lexer lexer;
+    const std::string testString = "(1 + 1) / 2 * 2 + 1";
+    const std::vector<Token> tokens = lexer.Lex(testString.c_str());
+
+    Parser parser;
+    std::unique_ptr<AST::Expression> expr = parser.Parse(tokens);
+    EXPECT_NE(expr, nullptr);
+
+    AST::Printer printer;
+    EXPECT_EQ(printer.Print(expr.get()), "(+ (* (/ (group (+ 1 1)) 2) 2) 1)");
 }
