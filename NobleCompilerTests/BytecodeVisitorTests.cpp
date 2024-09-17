@@ -14,7 +14,7 @@ TEST(BytecodeVisitor, Empty)
     Frame frame;
     BytecodeVisitor bytecodeVisitor;
     bytecodeVisitor.GenerateOps(nullptr, frame);
-    EXPECT_EQ(frame.NumOps(), 0);
+    EXPECT_EQ(frame.GetOps().Count(), 0);
 }
 
 TEST(BytecodeVisitor, Startup)
@@ -31,7 +31,7 @@ TEST(BytecodeVisitor, Startup)
     BytecodeVisitor bytecodeVisitor;
     bytecodeVisitor.GenerateOps(expr.get(), frame);
 
-    EXPECT_NE(frame.NumOps(), 0);
+    EXPECT_NE(frame.GetOps().Count(), 0);
     EXPECT_EQ(frame.ReadOp(0), Op::Code::Constant);
     EXPECT_EQ(frame.ReadOp(5), Op::Code::Constant);
     EXPECT_EQ(frame.ReadOp(10), Op::Code::Divide);
@@ -57,5 +57,5 @@ TEST(BytecodeVisitor, NoDecimals)
     BytecodeVisitor bytecodeVisitor;
     bytecodeVisitor.GenerateOps(expr.get(), frame);
 
-    EXPECT_EQ(frame.NumConstants(), 5);
+    EXPECT_EQ(frame.GetConstants().Count(), 5);
 }

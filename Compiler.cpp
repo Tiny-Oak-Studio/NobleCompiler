@@ -34,13 +34,13 @@ namespace Noble::Compiler
         std::ofstream ops(name + ".naf", std::ios::trunc | std::ios::binary);
         if (!ops.is_open()) return false;
 
-        ops.write(reinterpret_cast<const std::ostream::char_type*>(frame.GetOps().GetArray()), frame.NumOps() * sizeof(Core::Op::Type));
+        ops.write(reinterpret_cast<const std::ostream::char_type*>(frame.GetOps().GetArray()), frame.GetOps().Count() * sizeof(Core::Op::Type));
         ops.close();
 
         std::ofstream constants(name + ".ndf", std::ios::trunc | std::ios::binary);
         if (!constants.is_open()) return false;
 
-        constants.write(reinterpret_cast<const std::ostream::char_type*>(frame.GetConstants().GetArray()), frame.NumConstants() * sizeof(ValueType));
+        constants.write(reinterpret_cast<const std::ostream::char_type*>(frame.GetConstants().GetArray()), frame.GetConstants().Count() * sizeof(ValueType));
         return true;
     }
 

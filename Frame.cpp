@@ -39,16 +39,6 @@ namespace Noble::Compiler
         return constants.Count() - 1;
     }
 
-    Address::Single Frame::NumOps() const
-    {
-        return ops.Count();
-    }
-
-    Address::Single Frame::NumConstants() const
-    {
-        return constants.Count();
-    }
-
     const List<Op::Type>& Frame::GetOps() const
     {
         return ops;
