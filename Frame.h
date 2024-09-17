@@ -1,7 +1,6 @@
-#ifndef NOBLE_CORE_FRAME_H_INCLUDED
-#define NOBLE_CORE_FRAME_H_INCLUDED
+#ifndef NOBLE_COMPILER_FRAME_H_INCLUDED
+#define NOBLE_COMPILER_FRAME_H_INCLUDED
 
-#include <stdint.h> //Use old header for Arduino compatibility
 #include "NobleCore/Value.h"
 #include "NobleCore/List.h"
 #include "NobleCore/Op.h"
@@ -51,4 +50,4 @@ namespace Noble::Compiler
     };
 }
 
-#endif //NOBLE_CORE_FRAME_H_INCLUDED
+#endif //NOBLE_COMPILER_FRAME_H_INCLUDED
