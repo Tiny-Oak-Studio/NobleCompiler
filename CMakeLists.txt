@@ -57,6 +57,7 @@ add_executable(
         NobleCore/Value.h
         NobleCompilerTests/NobleCompilerTests.cpp
         NobleCompilerTests/LexerTests.cpp
+        NobleCompilerTests/FrameTests.cpp
         NobleCompilerTests/CompilerTests.cpp
         NobleCompilerTests/ASTTests.cpp
         NobleCompilerTests/ParserTests.cpp
