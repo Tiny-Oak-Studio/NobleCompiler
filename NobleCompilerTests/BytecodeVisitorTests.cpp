@@ -31,16 +31,18 @@ TEST(BytecodeVisitor, Startup)
     BytecodeVisitor bytecodeVisitor;
     bytecodeVisitor.GenerateOps(expr.get(), frame);
 
+    constexpr uint8_t addrSize = sizeof(Address::Single);
+
     EXPECT_NE(frame.GetOps().Count(), 0);
     EXPECT_EQ(frame.ReadOp(0), Op::Code::Constant);
-    EXPECT_EQ(frame.ReadOp(5), Op::Code::Constant);
-    EXPECT_EQ(frame.ReadOp(10), Op::Code::Divide);
-    EXPECT_EQ(frame.ReadOp(11), Op::Code::Constant);
-    EXPECT_EQ(frame.ReadOp(16), Op::Code::Constant);
-    EXPECT_EQ(frame.ReadOp(21), Op::Code::Constant);
-    EXPECT_EQ(frame.ReadOp(26), Op::Code::Add);
-    EXPECT_EQ(frame.ReadOp(27), Op::Code::Multiply);
-    EXPECT_EQ(frame.ReadOp(28), Op::Code::Add);
+    EXPECT_EQ(frame.ReadOp(addrSize + 1), Op::Code::Constant);
+    EXPECT_EQ(frame.ReadOp(2 * addrSize + 2), Op::Code::Divide);
+    EXPECT_EQ(frame.ReadOp(2 * addrSize + 3), Op::Code::Constant);
+    EXPECT_EQ(frame.ReadOp(3 * addrSize + 4), Op::Code::Constant);
+    EXPECT_EQ(frame.ReadOp(4 * addrSize + 5), Op::Code::Constant);
+    EXPECT_EQ(frame.ReadOp(5 * addrSize + 6), Op::Code::Add);
+    EXPECT_EQ(frame.ReadOp(5 * addrSize + 7), Op::Code::Multiply);
+    EXPECT_EQ(frame.ReadOp(5 * addrSize + 8), Op::Code::Add);
 }
 
 TEST(BytecodeVisitor, NoDecimals)

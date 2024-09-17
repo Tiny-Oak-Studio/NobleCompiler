@@ -7,7 +7,7 @@
 
 namespace Noble::Compiler::Bytecode
 {
-    void BytecodeVisitor::GenerateOps(AST::Expression* expression, Compiler::Frame& frame)
+    void BytecodeVisitor::GenerateOps(AST::Expression* expression, Frame& frame)
     {
         if (expression == nullptr) return;
 
@@ -23,10 +23,10 @@ namespace Noble::Compiler::Bytecode
         //std::cout << binaryExpression->operation->ToString() << " ";
         switch (binaryExpression->operation->type)
         {
-            case Token::Type::Minus: frame->WriteOp(Core::Op::Code::Subtract); break;
-            case Token::Type::Plus:  frame->WriteOp(Core::Op::Code::Add);      break;
-            case Token::Type::Star:  frame->WriteOp(Core::Op::Code::Multiply); break;
-            case Token::Type::Slash: frame->WriteOp(Core::Op::Code::Divide);   break;
+            case Token::Type::Minus: frame->WriteOp(Op::Code::Subtract); break;
+            case Token::Type::Plus:  frame->WriteOp(Op::Code::Add);      break;
+            case Token::Type::Star:  frame->WriteOp(Op::Code::Multiply); break;
+            case Token::Type::Slash: frame->WriteOp(Op::Code::Divide);   break;
             default: break;
         }
         return 0;
@@ -58,8 +58,8 @@ namespace Noble::Compiler::Bytecode
         //std::cout << unaryExpression->operation->ToString() << " ";
         switch (unaryExpression->operation->type)
         {
-            case Token::Type::Bang:  frame->WriteOp(Core::Op::Code::Not);    break;
-            case Token::Type::Minus: frame->WriteOp(Core::Op::Code::Negate); break;
+            case Token::Type::Bang:  frame->WriteOp(Op::Code::Not);    break;
+            case Token::Type::Minus: frame->WriteOp(Op::Code::Negate); break;
             default: break;
         }
         return 0;

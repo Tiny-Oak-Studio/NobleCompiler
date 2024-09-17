@@ -1,7 +1,5 @@
 #include "Compiler.h"
 
-#include <atomic>
-
 #include "Bytecode/BytecodeVisitor.h"
 #include "Optimisations/ConstantFoldingVisitor.h"
 
@@ -43,5 +41,4 @@ namespace Noble::Compiler
         constants.write(reinterpret_cast<const std::ostream::char_type*>(frame.GetConstants().GetArray()), frame.GetConstants().Count() * sizeof(ValueType));
         return true;
     }
-
 }
