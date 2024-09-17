@@ -9,7 +9,7 @@
 #include "../AST/Expression.h"
 #include "../AST/ExpressionVisitor.h"
 #include "../NobleCore/Value.h"
-#include "../NobleCore/Frame.h"
+#include "../Frame.h"
 #include "../NobleCore/Op.h"
 
 namespace Noble::Compiler::Optimisations

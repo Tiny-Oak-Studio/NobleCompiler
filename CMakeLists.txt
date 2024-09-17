@@ -19,6 +19,8 @@ enable_testing()
 
 add_executable(
         NobleCompilerTests
+        Frame.cpp
+        Frame.h
         Lexer.cpp
         Lexer.h
         Parser.cpp

@@ -3,12 +3,11 @@
 #include "../Token.h"
 #include "../Lexer.h"
 #include "../Parser.h"
-#include "../NobleCore/Frame.h"
+#include "../Frame.h"
 #include "../Bytecode/BytecodeVisitor.h"
 
 using namespace Noble::Compiler::Bytecode;
 using namespace Noble::Compiler;
-using namespace Noble::Core;
 
 TEST(BytecodeVisitor, Empty)
 {

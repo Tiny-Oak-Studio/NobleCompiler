@@ -5,7 +5,7 @@
 #include <fstream>
 #include "Lexer.h"
 #include "Parser.h"
-#include "NobleCore/Frame.h"
+#include "Frame.h"
 
 namespace Noble::Compiler
 {
@@ -14,7 +14,7 @@ namespace Noble::Compiler
     public:
         ///@ brief Compiles Noble General-Purpose Language into Noble Assembly-Language
         bool Compile(const std::string& NGPLSource);
-        bool WriteFrame(const Core::Frame& frame, const std::string& name);
+        bool WriteFrame(const Frame& frame, const std::string& name);
     private:
         std::string source;
     };

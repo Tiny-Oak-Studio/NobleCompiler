@@ -7,7 +7,7 @@
 
 namespace Noble::Compiler::Bytecode
 {
-    void BytecodeVisitor::GenerateOps(AST::Expression* expression, Core::Frame& frame)
+    void BytecodeVisitor::GenerateOps(AST::Expression* expression, Compiler::Frame& frame)
     {
         if (expression == nullptr) return;
 
@@ -20,7 +20,7 @@ namespace Noble::Compiler::Bytecode
         binaryExpression->right->Accept(this);
         binaryExpression->left->Accept(this);
 
-        std::cout << binaryExpression->operation->ToString() << " ";
+        //std::cout << binaryExpression->operation->ToString() << " ";
         switch (binaryExpression->operation->type)
         {
             case Token::Type::Minus: frame->WriteOp(Core::Op::Code::Subtract); break;
@@ -40,7 +40,7 @@ namespace Noble::Compiler::Bytecode
 
     std::any BytecodeVisitor::Visit(AST::LiteralExpression* literalExpression)
     {
-        std::cout << literalExpression->ToString() << " ";
+        //std::cout << literalExpression->ToString() << " ";
         switch (literalExpression->type)
         {
             case AST::LiteralExpression::Type::Boolean: frame->WriteConstant(ToValue(std::get<bool>(literalExpression->data))); break;

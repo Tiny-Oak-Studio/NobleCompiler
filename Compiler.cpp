@@ -15,7 +15,7 @@ namespace Noble::Compiler
 
         Lexer lexer;
         Parser parser;
-        Core::Frame frame;
+        Frame frame;
 
         //Optimisations::ConstantFoldingVisitor constantRollerVisitor;
         Bytecode::BytecodeVisitor bytecodeVisitor;
@@ -29,9 +29,9 @@ namespace Noble::Compiler
         return true;
     }
 
-    bool Compiler::WriteFrame(const Core::Frame &frame, const std::string& name)
+    bool Compiler::WriteFrame(const Frame &frame, const std::string& name)
     {
-        std::ofstream ops(name + ".nal", std::ios::trunc | std::ios::binary);
+        std::ofstream ops(name + ".naf", std::ios::trunc | std::ios::binary);
         if (!ops.is_open()) return false;
 
         ops.write(reinterpret_cast<const std::ostream::char_type*>(frame.GetOps().GetArray()), frame.NumOps() * sizeof(Core::Op::Type));
