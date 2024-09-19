@@ -19,6 +19,7 @@ jobs:
     
     steps:
     - uses: actions/checkout@v4
+    - run: git submodule init
     - run: git submodule update --remote --merge
     - uses: aminya/setup-cpp@v1
       with:
