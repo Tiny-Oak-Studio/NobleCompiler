@@ -62,8 +62,6 @@ add_executable(
         NobleCompilerTests/ASTTests.cpp
         NobleCompilerTests/ParserTests.cpp
         NobleCompilerTests/BytecodeVisitorTests.cpp
-        Debug/FramePrinter.cpp
-        Debug/FramePrinter.h
         Optimisations/ConstantFoldingVisitor.cpp
         Optimisations/ConstantFoldingVisitor.h
 )
