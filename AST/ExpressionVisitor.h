@@ -12,6 +12,7 @@ namespace Noble::Compiler::AST
         virtual std::any Visit(struct GroupingExpression* groupingExpression) = 0;
         virtual std::any Visit(struct LiteralExpression* literalExpression) = 0;
         virtual std::any Visit(struct UnaryExpression* unaryExpression) = 0;
+        virtual std::any Visit(struct VariableExpression* variableExpression) = 0;
     };
 }
 

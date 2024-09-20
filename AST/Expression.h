@@ -18,6 +18,7 @@ namespace Noble::Compiler::AST
             Grouping,
             Literal,
             Unary,
+            Variable
         };
 
         Type ExpressionType = None;
@@ -26,6 +27,6 @@ namespace Noble::Compiler::AST
     };
 
     typedef std::unique_ptr<Expression> ExprPtr;
-} // Noble
+}
 
 #endif //EXPRESSION_H_INCLUDED

@@ -13,7 +13,7 @@ namespace Noble::Compiler
     {
     public:
         ///@ brief Compiles Noble General-Purpose Language into Noble Assembly-Language
-        bool Compile(const std::string& NGPLSource);
+        bool Compile(const std::string& NGPLSource, const std::string& frameName);
         static bool WriteFrame(const Frame& frame, const std::string& name);
     private:
         std::string source;

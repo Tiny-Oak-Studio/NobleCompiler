@@ -18,6 +18,6 @@ namespace Noble::Compiler::AST
 
         std::any Accept(ExpressionVisitor *visitor) override;
     };
-} // Noble
+}
 
 #endif //BINARYEXPRESSION_H

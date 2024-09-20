@@ -15,6 +15,7 @@ namespace Noble::Compiler::AST
         std::any Visit(GroupingExpression* groupingExpression) override;
         std::any Visit(LiteralExpression* literalExpression) override;
         std::any Visit(UnaryExpression* unaryExpression) override;
+        std::any Visit(VariableExpression* variableExpression) override;
 
         std::any Parenthesize(const std::string& name, std::initializer_list<Expression*> expressions);
     };

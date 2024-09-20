@@ -9,18 +9,15 @@ namespace Noble::Compiler
         this->tokens = tokens;
         currentToken = 0;
 
-        return std::move(Expression());
-
-        /*
         try
         {
-            return Expression();
+            return std::move(Expression());
         }
         catch (std::exception& e)
         {
-            std::cout << "ERROR: " << e.what() << "\n";
+            std::cout << "Error occurred while parsing: " << e.what() << "\n";
             return nullptr;
-        }*/
+        }
     }
 
     const Token* Parser::Peek(const int offset) const
@@ -87,6 +84,7 @@ namespace Noble::Compiler
                 case Token::Type::Print:
                 case Token::Type::Return:
                     return;
+                default: ; //Nothing
             }
             Advance();
         }
@@ -183,6 +181,10 @@ namespace Noble::Compiler
             std::unique_ptr<AST::Expression> expr = Expression();
             Consume(Token::Type::RightParen, "Expecting ')' after expression.");
             return std::make_unique<AST::GroupingExpression>(expr);
+        }
+        if (Match({Token::Type::Identifier}))
+        {
+
         }
         return nullptr;
     }

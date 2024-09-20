@@ -19,6 +19,7 @@ namespace Noble::Compiler::Bytecode
         std::any Visit(AST::GroupingExpression* groupingExpression) override;
         std::any Visit(AST::LiteralExpression* literalExpression) override;
         std::any Visit(AST::UnaryExpression* unaryExpression) override;
+        std::any Visit(AST::VariableExpression* variableExpression) override;
     };
 }
 

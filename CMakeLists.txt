@@ -66,6 +66,49 @@ add_executable(
         Optimisations/ConstantFoldingVisitor.h
 )
 
+add_executable(
+        noblec
+        Frame.cpp
+        Frame.h
+        Lexer.cpp
+        Lexer.h
+        Parser.cpp
+        Parser.h
+        Compiler.cpp
+        Compiler.h
+        Token.cpp
+        Token.h
+        AST/Expression.cpp
+        AST/Expression.h
+        AST/ExpressionVisitor.h
+        AST/BinaryExpression.cpp
+        AST/BinaryExpression.h
+        AST/GroupingExpression.cpp
+        AST/GroupingExpression.h
+        AST/UnaryExpression.cpp
+        AST/UnaryExpression.h
+        AST/LiteralExpression.h
+        AST/LiteralExpression.cpp
+        AST/ExpressionTypes.h
+        AST/Printer.cpp
+        AST/Printer.h
+        Exceptions/ParseException.cpp
+        Exceptions/ParseException.h
+        Conversions/String.cpp
+        Conversions/String.h
+        Bytecode/BytecodeVisitor.cpp
+        Bytecode/BytecodeVisitor.h
+        NobleCore/Frame.cpp
+        NobleCore/Frame.h
+        NobleCore/Translation.cpp
+        NobleCore/Translation.h
+        NobleCore/Value.cpp
+        NobleCore/Value.h
+        Optimisations/ConstantFoldingVisitor.cpp
+        Optimisations/ConstantFoldingVisitor.h
+        main.cpp
+)
+
 target_link_libraries(
         NobleCompilerTests
         GTest::gtest_main

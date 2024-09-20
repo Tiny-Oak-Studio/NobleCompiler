@@ -64,4 +64,10 @@ namespace Noble::Compiler::Bytecode
         }
         return 0;
     }
+
+    std::any BytecodeVisitor::Visit(AST::VariableExpression *variableExpression)
+    {
+        return 0;
+    }
+
 }

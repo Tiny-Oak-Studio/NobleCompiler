@@ -33,6 +33,11 @@ namespace Noble::Compiler::AST
         return Parenthesize(unaryExpression->operation->ToString(), { unaryExpression->right.get() } );
     }
 
+    std::any Printer::Visit(VariableExpression* variableExpression)
+    {
+        return 0;
+    }
+
     std::any Printer::Parenthesize(const std::string& name, const std::initializer_list<Expression*> expressions)
     {
         std::string str = "(" + name;

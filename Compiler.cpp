@@ -5,7 +5,7 @@
 
 namespace Noble::Compiler
 {
-    bool Compiler::Compile(const std::string& NGPLSource)
+    bool Compiler::Compile(const std::string& NGPLSource, const std::string& frameName)
     {
         //We use the compiler's copy of the source and keep it around as long as the compiler it around
         //because the Lexer and Parser's Tokens point directly to the source for their lexemes.
@@ -22,7 +22,7 @@ namespace Noble::Compiler
 
         //constantRollerVisitor.FoldConstants(AST);
         bytecodeVisitor.GenerateOps(AST.get(), frame);
-        WriteFrame(frame, "main");
+        WriteFrame(frame, frameName);
 
         return true;
     }
