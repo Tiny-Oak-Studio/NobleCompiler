@@ -4,6 +4,7 @@
 #include "../AST/GroupingExpression.h"
 #include "../AST/LiteralExpression.h"
 #include "../AST/UnaryExpression.h"
+#include "../AST/VariableExpression.h"
 
 namespace Noble::Compiler::Bytecode
 {
@@ -20,13 +21,16 @@ namespace Noble::Compiler::Bytecode
         binaryExpression->right->Accept(this);
         binaryExpression->left->Accept(this);
 
-        //std::cout << binaryExpression->operation->ToString() << " ";
+        std::cout << binaryExpression->operation->ToString() << " ";
         switch (binaryExpression->operation->type)
         {
-            case Token::Type::Minus: frame->WriteOp(Op::Code::Subtract); break;
-            case Token::Type::Plus:  frame->WriteOp(Op::Code::Add);      break;
-            case Token::Type::Star:  frame->WriteOp(Op::Code::Multiply); break;
-            case Token::Type::Slash: frame->WriteOp(Op::Code::Divide);   break;
+            case Token::Type::EqualEqual:   frame->WriteOp(Op::Code::Equal);        break;
+            case Token::Type::GreaterEqual: frame->WriteOp(Op::Code::GreaterEqual); break;
+            case Token::Type::LessEqual:    frame->WriteOp(Op::Code::LessEqual);    break;
+            case Token::Type::Minus:        frame->WriteOp(Op::Code::Subtract);     break;
+            case Token::Type::Plus:         frame->WriteOp(Op::Code::Add);          break;
+            case Token::Type::Star:         frame->WriteOp(Op::Code::Multiply);     break;
+            case Token::Type::Slash:        frame->WriteOp(Op::Code::Divide);       break;
             default: break;
         }
         return 0;
@@ -40,7 +44,7 @@ namespace Noble::Compiler::Bytecode
 
     std::any BytecodeVisitor::Visit(AST::LiteralExpression* literalExpression)
     {
-        //std::cout << literalExpression->ToString() << " ";
+        std::cout << literalExpression->ToString() << " ";
         switch (literalExpression->type)
         {
             case AST::LiteralExpression::Type::Boolean: frame->WriteConstant(ToValue(std::get<bool>(literalExpression->data))); break;
@@ -55,7 +59,7 @@ namespace Noble::Compiler::Bytecode
     {
         unaryExpression->right->Accept(this);
 
-        //std::cout << unaryExpression->operation->ToString() << " ";
+        std::cout << unaryExpression->operation->ToString() << " ";
         switch (unaryExpression->operation->type)
         {
             case Token::Type::Bang:  frame->WriteOp(Op::Code::Not);    break;
@@ -67,6 +71,7 @@ namespace Noble::Compiler::Bytecode
 
     std::any BytecodeVisitor::Visit(AST::VariableExpression *variableExpression)
     {
+        std::cout << "VAR: " << variableExpression->name << "\n";
         return 0;
     }
 

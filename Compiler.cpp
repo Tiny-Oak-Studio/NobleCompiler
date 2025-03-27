@@ -22,21 +22,35 @@ namespace Noble::Compiler
 
         //constantRollerVisitor.FoldConstants(AST);
         bytecodeVisitor.GenerateOps(AST.get(), frame);
-        WriteFrame(frame, frameName);
+        ;
 
-        return true;
+        return WriteFrame(frame, frameName) && Debug::MakeDebugFile(frame, frameName);
     }
 
     bool Compiler::WriteFrame(const Frame &frame, const std::string& name)
     {
         std::ofstream ops(name + ".naf", std::ios::trunc | std::ios::binary);
-        if (!ops.is_open()) return false;
+        if (!ops.is_open())
+        {
+            std::cerr << "Error: Unable to open assembly file '" << name << ".naf' while writing frame.\n";
+            return false;
+        }
 
         ops.write(reinterpret_cast<const std::ostream::char_type*>(frame.GetOps().GetArray()), frame.GetOps().Count() * sizeof(Core::Op::Type));
         ops.close();
 
+        std::cout << "\nOPS\n";
+        for (unsigned i = 0; i < frame.GetOps().Count(); ++i)
+        {
+            std::cout << static_cast<int>(frame.GetOps()[i]) << "\n";
+        }
+
         std::ofstream constants(name + ".ndf", std::ios::trunc | std::ios::binary);
-        if (!constants.is_open()) return false;
+        if (!constants.is_open())
+        {
+            std::cerr << "Error: Unable to open data file '" << name << ".ndf' while writing frame.\n";
+            return false;
+        }
 
         constants.write(reinterpret_cast<const std::ostream::char_type*>(frame.GetConstants().GetArray()), frame.GetConstants().Count() * sizeof(ValueType));
         return true;

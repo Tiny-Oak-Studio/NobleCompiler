@@ -2,6 +2,7 @@
 #define BYTECODEVISITOR_H_INCLUDED
 
 #include <any>
+#include <iostream>
 #include "../Frame.h"
 #include "../AST/Expression.h"
 #include "../AST/ExpressionVisitor.h"

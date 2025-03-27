@@ -64,6 +64,8 @@ add_executable(
         NobleCompilerTests/BytecodeVisitorTests.cpp
         Optimisations/ConstantFoldingVisitor.cpp
         Optimisations/ConstantFoldingVisitor.h
+        Debug.cpp
+        Debug.h
 )
 
 add_executable(
@@ -107,6 +109,8 @@ add_executable(
         Optimisations/ConstantFoldingVisitor.cpp
         Optimisations/ConstantFoldingVisitor.h
         main.cpp
+        Debug.cpp
+        Debug.h
 )
 
 target_link_libraries(

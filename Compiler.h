@@ -6,6 +6,7 @@
 #include "Lexer.h"
 #include "Parser.h"
 #include "Frame.h"
+#include "Debug.h"
 
 namespace Noble::Compiler
 {

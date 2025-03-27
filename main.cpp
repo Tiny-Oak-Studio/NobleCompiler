@@ -46,6 +46,7 @@ int main(const int argc, char** argv)
         std::string fileContents;
         if (!ReadFile(argv[i], fileContents))
         {
+            std::cerr << "Unable to read file!\n";
             return -1;
         }
         const std::string fileTitle = argv[i];
