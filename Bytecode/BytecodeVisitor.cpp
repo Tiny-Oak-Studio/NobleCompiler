@@ -15,6 +15,10 @@ namespace Noble::Compiler::Bytecode
         this->frame = &frame;
         for (const auto& statement : statements)
         {
+            if (statement->StatementType == AST::Statement::Print)
+            {
+                //frame.WriteOp(Op::Code::Print);
+            }
             statement->expression->Accept(this);
         }
     }

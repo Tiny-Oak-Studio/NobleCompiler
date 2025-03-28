@@ -70,6 +70,8 @@ add_executable(
         AST/ExpressionStatement.cpp
         AST/ExpressionStatement.h
         AST/Statement.cpp
+        AST/PrintStatement.cpp
+        AST/PrintStatement.h
 )
 
 add_executable(
@@ -119,6 +121,8 @@ add_executable(
         AST/ExpressionStatement.cpp
         AST/ExpressionStatement.h
         AST/Statement.cpp
+        AST/PrintStatement.cpp
+        AST/PrintStatement.h
 )
 
 target_link_libraries(

@@ -4,24 +4,6 @@
 
 namespace Noble::Compiler
 {
-    /*
-    AST::ExprPtr Parser::Parse(const std::vector<Token>& tokens)
-    {
-        this->tokens = tokens;
-        currentToken = 0;
-
-        try
-        {
-            return std::move(Expression());
-        }
-        catch (std::exception& e)
-        {
-            std::cout << "Error occurred while parsing: " << e.what() << "\n";
-            return nullptr;
-        }
-    }
-    */
-
     std::vector<AST::StatementPtr> Parser::Parse(const std::vector<Token>& tokens)
     {
         this->tokens = tokens;
@@ -121,6 +103,14 @@ namespace Noble::Compiler
         Consume(Token::Semicolon, "Expect ';' after expression.");
         return std::make_unique<AST::ExpressionStatement>(expression);
     }
+
+    AST::StatementPtr Parser::PrintStatement()
+    {
+        AST::ExprPtr expression = Expression();
+        Consume(Token::Type::Semicolon, "Expect ';' after print statement.");
+        return std::make_unique<AST::PrintStatement>(expression);
+    }
+
 
     AST::ExprPtr Parser::Equality()
     {

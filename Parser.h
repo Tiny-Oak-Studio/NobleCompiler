@@ -9,6 +9,7 @@
 #include "AST/ExpressionTypes.h"
 #include "AST/Statement.h"
 #include "AST/ExpressionStatement.h"
+#include "AST/PrintStatement.h"
 
 namespace Noble::Compiler
 {
@@ -33,6 +34,7 @@ namespace Noble::Compiler
         AST::ExprPtr Expression();
         AST::StatementPtr Statement();
         AST::StatementPtr ExpressionStatement();
+        AST::StatementPtr PrintStatement();
         AST::ExprPtr Equality();
         AST::ExprPtr Comparison();
         AST::ExprPtr Term();
