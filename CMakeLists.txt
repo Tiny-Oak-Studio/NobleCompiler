@@ -66,6 +66,10 @@ add_executable(
         Optimisations/ConstantFoldingVisitor.h
         Debug.cpp
         Debug.h
+        AST/Statement.h
+        AST/ExpressionStatement.cpp
+        AST/ExpressionStatement.h
+        AST/Statement.cpp
 )
 
 add_executable(
@@ -111,6 +115,10 @@ add_executable(
         main.cpp
         Debug.cpp
         Debug.h
+        AST/Statement.h
+        AST/ExpressionStatement.cpp
+        AST/ExpressionStatement.h
+        AST/Statement.cpp
 )
 
 target_link_libraries(

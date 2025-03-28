@@ -17,12 +17,12 @@ namespace Noble::Compiler
 
         //Optimisations::ConstantFoldingVisitor constantRollerVisitor;
         Bytecode::BytecodeVisitor bytecodeVisitor;
-
-        std::unique_ptr<AST::Expression> AST = parser.Parse(lexer.Lex(source.c_str()));
+        const std::vector<Token> tokens = lexer.Lex(source.c_str());
+        Debug::MakeTokenFile(tokens, frameName);
+        std::vector<AST::StatementPtr> AST = parser.Parse(tokens);
 
         //constantRollerVisitor.FoldConstants(AST);
-        bytecodeVisitor.GenerateOps(AST.get(), frame);
-        ;
+        bytecodeVisitor.GenerateOps(AST, frame);
 
         return WriteFrame(frame, frameName) && Debug::MakeDebugFile(frame, frameName);
     }
@@ -38,12 +38,6 @@ namespace Noble::Compiler
 
         ops.write(reinterpret_cast<const std::ostream::char_type*>(frame.GetOps().GetArray()), frame.GetOps().Count() * sizeof(Core::Op::Type));
         ops.close();
-
-        std::cout << "\nOPS\n";
-        for (unsigned i = 0; i < frame.GetOps().Count(); ++i)
-        {
-            std::cout << static_cast<int>(frame.GetOps()[i]) << "\n";
-        }
 
         std::ofstream constants(name + ".ndf", std::ios::trunc | std::ios::binary);
         if (!constants.is_open())

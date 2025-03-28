@@ -8,12 +8,15 @@
 
 namespace Noble::Compiler::Bytecode
 {
-    void BytecodeVisitor::GenerateOps(AST::Expression* expression, Frame& frame)
+    void BytecodeVisitor::GenerateOps(std::vector<AST::StatementPtr>& statements, Frame& frame)
     {
-        if (expression == nullptr) return;
+        if (statements.empty()) return;
 
         this->frame = &frame;
-        expression->Accept(this);
+        for (const auto& statement : statements)
+        {
+            statement->expression->Accept(this);
+        }
     }
 
     std::any BytecodeVisitor::Visit(AST::BinaryExpression* binaryExpression)
@@ -21,7 +24,7 @@ namespace Noble::Compiler::Bytecode
         binaryExpression->right->Accept(this);
         binaryExpression->left->Accept(this);
 
-        std::cout << binaryExpression->operation->ToString() << " ";
+        //std::cout << binaryExpression->operation->ToString() << " ";
         switch (binaryExpression->operation->type)
         {
             case Token::Type::EqualEqual:   frame->WriteOp(Op::Code::Equal);        break;
@@ -44,7 +47,7 @@ namespace Noble::Compiler::Bytecode
 
     std::any BytecodeVisitor::Visit(AST::LiteralExpression* literalExpression)
     {
-        std::cout << literalExpression->ToString() << " ";
+        //std::cout << literalExpression->ToString() << " ";
         switch (literalExpression->type)
         {
             case AST::LiteralExpression::Type::Boolean: frame->WriteConstant(ToValue(std::get<bool>(literalExpression->data))); break;
@@ -59,7 +62,7 @@ namespace Noble::Compiler::Bytecode
     {
         unaryExpression->right->Accept(this);
 
-        std::cout << unaryExpression->operation->ToString() << " ";
+        //std::cout << unaryExpression->operation->ToString() << " ";
         switch (unaryExpression->operation->type)
         {
             case Token::Type::Bang:  frame->WriteOp(Op::Code::Not);    break;

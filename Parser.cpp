@@ -4,7 +4,8 @@
 
 namespace Noble::Compiler
 {
-    std::unique_ptr<AST::Expression> Parser::Parse(const std::vector<Token>& tokens)
+    /*
+    AST::ExprPtr Parser::Parse(const std::vector<Token>& tokens)
     {
         this->tokens = tokens;
         currentToken = 0;
@@ -18,6 +19,20 @@ namespace Noble::Compiler
             std::cout << "Error occurred while parsing: " << e.what() << "\n";
             return nullptr;
         }
+    }
+    */
+
+    std::vector<AST::StatementPtr> Parser::Parse(const std::vector<Token>& tokens)
+    {
+        this->tokens = tokens;
+        currentToken = 0;
+
+        std::vector<AST::StatementPtr> statements;
+        while (!AtEndOfFile())
+        {
+            statements.emplace_back(Statement());
+        }
+        return statements;
     }
 
     const Token* Parser::Peek(const int offset) const
@@ -64,7 +79,7 @@ namespace Noble::Compiler
     {
         if (Check(type)) return Advance();
 
-        throw Exceptions::ParseException();
+        throw Exceptions::ParseException(message);
     }
 
     void Parser::Synchronise()
@@ -90,12 +105,24 @@ namespace Noble::Compiler
         }
     }
 
-    std::unique_ptr<AST::Expression> Parser::Expression()
+    AST::ExprPtr Parser::Expression()
     {
         return Equality();
     }
 
-    std::unique_ptr<AST::Expression> Parser::Equality()
+    AST::StatementPtr Parser::Statement()
+    {
+        return ExpressionStatement();
+    }
+
+    AST::StatementPtr Parser::ExpressionStatement()
+    {
+        AST::ExprPtr expression = Expression();
+        Consume(Token::Semicolon, "Expect ';' after expression.");
+        return std::make_unique<AST::ExpressionStatement>(expression);
+    }
+
+    AST::ExprPtr Parser::Equality()
     {
         std::unique_ptr<AST::Expression> expr = Comparison();
         while (Match({Token::Type::BangEqual, Token::Type::EqualEqual}))
@@ -107,7 +134,7 @@ namespace Noble::Compiler
         return expr;
     }
 
-    std::unique_ptr<AST::Expression> Parser::Comparison()
+    AST::ExprPtr Parser::Comparison()
     {
         std::unique_ptr<AST::Expression> expr = Term();
         while (Match({Token::Type::Greater, Token::Type::GreaterEqual, Token::Type::Less, Token::Type::LessEqual}))
@@ -119,7 +146,7 @@ namespace Noble::Compiler
         return expr;
     }
 
-    std::unique_ptr<AST::Expression> Parser::Term()
+    AST::ExprPtr Parser::Term()
     {
         std::unique_ptr<AST::Expression> expr = Factor();
         while (Match({Token::Type::Plus, Token::Type::Minus}))
@@ -131,7 +158,7 @@ namespace Noble::Compiler
         return expr;
     }
 
-    std::unique_ptr<AST::Expression> Parser::Factor()
+    AST::ExprPtr Parser::Factor()
     {
         std::unique_ptr<AST::Expression> expr = Unary();
         while (Match({Token::Type::Slash, Token::Type::Star}))
@@ -143,7 +170,7 @@ namespace Noble::Compiler
         return expr;
     }
 
-    std::unique_ptr<AST::Expression> Parser::Unary()
+    AST::ExprPtr Parser::Unary()
     {
         if (Match({Token::Type::Bang, Token::Type::Minus}))
         {
@@ -154,7 +181,7 @@ namespace Noble::Compiler
         return Primary();
     }
 
-    std::unique_ptr<AST::Expression> Parser::Primary()
+    AST::ExprPtr Parser::Primary()
     {
         if (Match({Token::Type::False}))
         {

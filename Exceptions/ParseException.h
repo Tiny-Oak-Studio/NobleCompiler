@@ -2,14 +2,19 @@
 #define PARSEEXCEPTION_H_INCLUDED
 
 #include <exception>
+#include <string>
 
 namespace Noble::Compiler::Exceptions
 {
-    class ParseException final : public std::exception
+    struct ParseException final : std::exception
     {
+        ParseException(const std::string& errorMessage);
+
+        std::string error;
+
         [[nodiscard]] const char* what() const noexcept override
         {
-            return "ParseException: ";
+            return error.c_str();
         }
     };
 }

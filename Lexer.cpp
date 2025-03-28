@@ -94,6 +94,7 @@ namespace Noble::Compiler
                 case '\f':
                 case '\r':
                 case '\t':
+                case '\n':
                     ReadCharacter();
                     break;
                 case '/':

@@ -7,13 +7,15 @@
 #include <initializer_list>
 #include "Token.h"
 #include "AST/ExpressionTypes.h"
+#include "AST/Statement.h"
+#include "AST/ExpressionStatement.h"
 
 namespace Noble::Compiler
 {
     class Parser
     {
     public:
-        std::unique_ptr<AST::Expression> Parse(const std::vector<Token>& tokens);
+        std::vector<AST::StatementPtr> Parse(const std::vector<Token>& tokens);
     protected:
         std::vector<Token> tokens;
         std::size_t currentToken = 0;
@@ -28,13 +30,15 @@ namespace Noble::Compiler
         const Token* Consume(Token::Type type, const std::string& message);
         void Synchronise();
 
-        std::unique_ptr<AST::Expression> Expression();
-        std::unique_ptr<AST::Expression> Equality();
-        std::unique_ptr<AST::Expression> Comparison();
-        std::unique_ptr<AST::Expression> Term();
-        std::unique_ptr<AST::Expression> Factor();
-        std::unique_ptr<AST::Expression> Unary();
-        std::unique_ptr<AST::Expression> Primary();
+        AST::ExprPtr Expression();
+        AST::StatementPtr Statement();
+        AST::StatementPtr ExpressionStatement();
+        AST::ExprPtr Equality();
+        AST::ExprPtr Comparison();
+        AST::ExprPtr Term();
+        AST::ExprPtr Factor();
+        AST::ExprPtr Unary();
+        AST::ExprPtr Primary();
     };
 } // Noble::Compiler
 
