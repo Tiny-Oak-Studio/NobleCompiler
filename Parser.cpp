@@ -201,7 +201,7 @@ namespace Noble::Compiler
         }
         if (Match({Token::Type::Identifier}))
         {
-
+            std::cout << "Identifier found!\n";
         }
         return nullptr;
     }
