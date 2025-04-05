@@ -32,6 +32,8 @@ namespace Noble::Compiler
         void Synchronise();
 
         AST::ExprPtr Expression();
+        AST::StatementPtr Declaration();
+        AST::StatementPtr VariableDeclaration();
         AST::StatementPtr Statement();
         AST::StatementPtr ExpressionStatement();
         AST::StatementPtr PrintStatement();

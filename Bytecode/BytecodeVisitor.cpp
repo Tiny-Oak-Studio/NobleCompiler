@@ -15,11 +15,7 @@ namespace Noble::Compiler::Bytecode
         this->frame = &frame;
         for (const auto& statement : statements)
         {
-            if (statement->StatementType == AST::Statement::Print)
-            {
-                //frame.WriteOp(Op::Code::Print);
-            }
-            statement->expression->Accept(this);
+            statement->Accept(this);
         }
     }
 
@@ -82,4 +78,13 @@ namespace Noble::Compiler::Bytecode
         return 0;
     }
 
+    std::any BytecodeVisitor::Visit(AST::ExpressionStatement* expressionStatement)
+    {
+
+    }
+
+    std::any BytecodeVisitor::Visit(AST::VariableStatement* variableStatement)
+    {
+
+    }
 }

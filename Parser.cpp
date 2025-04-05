@@ -1,5 +1,7 @@
 #include "Parser.h"
 
+#include "AST/VariableExpression.h"
+#include "AST/VariableStatement.h"
 #include "Exceptions/ParseException.h"
 
 namespace Noble::Compiler
@@ -92,6 +94,34 @@ namespace Noble::Compiler
         return Equality();
     }
 
+    AST::StatementPtr Parser::Declaration()
+    {
+        try
+        {
+            if (Match({Token::Type::Variable})) return VariableDeclaration();
+
+            return Statement();
+        }
+        catch (Exceptions::ParseException& e)
+        {
+            Synchronise();
+            return nullptr;
+        }
+    }
+
+    AST::StatementPtr Parser::VariableDeclaration()
+    {
+        const Token* name = Consume(Token::Identifier, "Expect variable name.");
+        AST::ExprPtr initialiser = nullptr;
+        if (Match({Token::Type::Equal}))
+        {
+            initialiser = Expression();
+        }
+
+        Consume(Token::Semicolon, "Expect ';' after variable declaration.");
+        return std::make_unique<AST::VariableStatement>(name, initialiser);
+    }
+
     AST::StatementPtr Parser::Statement()
     {
         return ExpressionStatement();
@@ -108,7 +138,7 @@ namespace Noble::Compiler
     {
         AST::ExprPtr expression = Expression();
         Consume(Token::Type::Semicolon, "Expect ';' after print statement.");
-        return std::make_unique<AST::PrintStatement>(expression);
+        return nullptr;//std::make_unique<AST::PrintStatement>(expression);
     }
 
 
@@ -202,6 +232,7 @@ namespace Noble::Compiler
         if (Match({Token::Type::Identifier}))
         {
             std::cout << "Identifier found!\n";
+            return std::make_unique<AST::VariableExpression>(Previous());
         }
         return nullptr;
     }

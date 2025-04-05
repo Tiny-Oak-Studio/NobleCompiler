@@ -55,7 +55,7 @@ namespace Noble::Compiler
          * @brief Creates an error Token with the provided error message.
          * @param errorMessage The error message to be displayed when this Token is parsed.
          */
-        explicit Token(const std::string& errorMessage);
+        Token(const std::string& errorMessage);
 
         /**
          * @return Returns the string representation of this Token.

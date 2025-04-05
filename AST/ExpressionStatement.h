@@ -9,6 +9,10 @@ namespace Noble::Compiler::AST
     struct ExpressionStatement final : Statement
     {
         ExpressionStatement(ExprPtr& expr);
+
+        std::any Accept(struct StatementVisitor *statementVisitor) override;
+
+        ExprPtr expression;
     };
 } // Noble::Compiler::AST
 

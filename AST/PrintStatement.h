@@ -5,9 +5,9 @@
 
 namespace Noble::Compiler::AST
 {
-    struct PrintStatement final : Statement
+    struct PrintStatement// final : Statement
     {
-        PrintStatement(ExprPtr& expr);
+
     };
 } // Noble::Compiler::AST
 

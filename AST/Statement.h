@@ -8,18 +8,9 @@ namespace Noble::Compiler::AST
 {
     struct Statement
     {
-        enum Type
-        {
-            None,
-            Expression,
-            Print
-        };
-
-        Statement(ExprPtr& expr);
         virtual ~Statement() = default;
 
-        Type StatementType = None;
-        ExprPtr expression;
+        virtual std::any Accept(struct StatementVisitor* statementVisitor) = 0;
     };
 
     typedef std::unique_ptr<Statement> StatementPtr;

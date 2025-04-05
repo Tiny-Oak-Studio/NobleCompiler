@@ -72,6 +72,9 @@ add_executable(
         AST/Statement.cpp
         AST/PrintStatement.cpp
         AST/PrintStatement.h
+        AST/VariableStatement.cpp
+        AST/VariableStatement.h
+        AST/StatementVisitor.h
 )
 
 add_executable(
@@ -123,6 +126,9 @@ add_executable(
         AST/Statement.cpp
         AST/PrintStatement.cpp
         AST/PrintStatement.h
+        AST/VariableStatement.cpp
+        AST/VariableStatement.h
+        AST/StatementVisitor.h
 )
 
 target_link_libraries(
