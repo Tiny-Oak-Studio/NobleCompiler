@@ -1,10 +1,12 @@
 #include "BytecodeVisitor.h"
 
 #include "../AST/BinaryExpression.h"
+#include "../AST/ExpressionStatement.h"
 #include "../AST/GroupingExpression.h"
 #include "../AST/LiteralExpression.h"
 #include "../AST/UnaryExpression.h"
 #include "../AST/VariableExpression.h"
+#include "../AST/VariableStatement.h"
 
 namespace Noble::Compiler::Bytecode
 {
@@ -80,11 +82,16 @@ namespace Noble::Compiler::Bytecode
 
     std::any BytecodeVisitor::Visit(AST::ExpressionStatement* expressionStatement)
     {
-
+        expressionStatement->expression->Accept(this);
+        std::cout << "EXPRSTATE\n";
+        frame->WriteOp(Op::Code::Pop);
+        return 0;
     }
 
     std::any BytecodeVisitor::Visit(AST::VariableStatement* variableStatement)
     {
-
+        //Define Variable
+        std::cout << "VARSTATE\n";
+        return 0;
     }
 }

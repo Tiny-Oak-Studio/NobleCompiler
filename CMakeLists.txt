@@ -74,6 +74,8 @@ add_executable(
         AST/PrintStatement.h
         AST/VariableStatement.cpp
         AST/VariableStatement.h
+        AST/VariableExpression.cpp
+        AST/VariableExpression.h
         AST/StatementVisitor.h
 )
 
@@ -128,6 +130,9 @@ add_executable(
         AST/PrintStatement.h
         AST/VariableStatement.cpp
         AST/VariableStatement.h
+        AST/VariableStatement.cpp
+        AST/VariableExpression.cpp
+        AST/VariableExpression.h
         AST/StatementVisitor.h
 )
 

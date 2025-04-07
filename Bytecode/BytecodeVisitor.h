@@ -27,7 +27,7 @@ namespace Noble::Compiler::Bytecode
 
         //StatementVisitor
         std::any Visit(AST::ExpressionStatement* expressionStatement) override;
-        std::any Visit(AST::VariableStatement* expressionStatement) override;
+        std::any Visit(AST::VariableStatement* variableStatement) override;
     };
 }
 

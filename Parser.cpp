@@ -2,7 +2,12 @@
 
 #include "AST/VariableExpression.h"
 #include "AST/VariableStatement.h"
+#include "AST/ExpressionStatement.h"
 #include "Exceptions/ParseException.h"
+#include "AST/BinaryExpression.h"
+#include "AST/UnaryExpression.h"
+#include "AST/LiteralExpression.h"
+#include "AST/GroupingExpression.h"
 
 namespace Noble::Compiler
 {
@@ -144,7 +149,7 @@ namespace Noble::Compiler
 
     AST::ExprPtr Parser::Equality()
     {
-        std::unique_ptr<AST::Expression> expr = Comparison();
+        AST::ExprPtr expr = Comparison();
         while (Match({Token::Type::BangEqual, Token::Type::EqualEqual}))
         {
             const Token* operation = Previous();

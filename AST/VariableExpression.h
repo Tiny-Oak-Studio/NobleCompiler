@@ -1,6 +1,7 @@
 #ifndef VARIABLEEXPRESSION_H_INCLUDED
 #define VARIABLEEXPRESSION_H_INCLUDED
 
+#include <memory>
 #include "Expression.h"
 #include "ExpressionVisitor.h"
 #include "../Token.h"
