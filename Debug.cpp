@@ -19,6 +19,7 @@ namespace Noble::Compiler
             case Op::Code::Divide:       ss << "DIV"; break;
             case Op::Code::Equal:        ss << "EQL"; break;
             case Op::Code::False:        ss << "FAL"; break;
+            case Op::Code::GetGlobal:    ss << "GEG"; break;
             case Op::Code::Greater:      ss << "GTR"; break;
             case Op::Code::GreaterEqual: ss << "GEQ"; break;
             case Op::Code::Less:         ss << "LES"; break;
@@ -117,6 +118,13 @@ namespace Noble::Compiler
                     break;
                 }
                 case Op::Code::DefineGlobal:
+                {
+                    const Address::Single globalVarAddress = frame.ReadAddress(i + 1);
+                    debugFile << std::setw(7) << std::setfill('0') << globalVarAddress << "   ";
+                    i += sizeof(Address::Single);
+                    break;
+                }
+                case Op::Code::GetGlobal:
                 {
                     const Address::Single globalVarAddress = frame.ReadAddress(i + 1);
                     debugFile << std::setw(7) << std::setfill('0') << globalVarAddress << "   ";

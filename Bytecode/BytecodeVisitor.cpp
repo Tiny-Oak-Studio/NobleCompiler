@@ -76,7 +76,9 @@ namespace Noble::Compiler::Bytecode
 
     std::any BytecodeVisitor::Visit(AST::VariableExpression *variableExpression)
     {
-        std::cout << "VAR: " << variableExpression->name << "\n";
+        const Address::Single globalVarAddr = globalVariables[variableExpression->name->ToString()];
+        frame->WriteOp(Op::Code::GetGlobal);
+        frame->WriteAddress(globalVarAddr);
         return 0;
     }
 
