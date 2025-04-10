@@ -3,13 +3,13 @@
 
 #include <any>
 #include <vector>
-#include <iostream>
 #include <unordered_map>
 
 #include "../Frame.h"
 #include "../AST/ExpressionVisitor.h"
 #include "../AST/Statement.h"
 #include "../AST/StatementVisitor.h"
+#include "../Exceptions/ByteCodeVisitorException.h"
 
 namespace Noble::Compiler::Bytecode
 {
@@ -34,7 +34,9 @@ namespace Noble::Compiler::Bytecode
         std::any Visit(AST::VariableStatement* variableStatement) override;
 
         //Helper methods
+        /// @brief Adds a named global variable to the global variables table and assigns it an address.
         void DefineVariable(const std::string& name);
+        Address::Single GetGlobalVariable(const std::string& name);
     };
 }
 

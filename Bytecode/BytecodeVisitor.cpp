@@ -74,9 +74,9 @@ namespace Noble::Compiler::Bytecode
         return 0;
     }
 
-    std::any BytecodeVisitor::Visit(AST::VariableExpression *variableExpression)
+    std::any BytecodeVisitor::Visit(AST::VariableExpression* variableExpression)
     {
-        const Address::Single globalVarAddr = globalVariables[variableExpression->name->ToString()];
+        const Address::Single globalVarAddr = GetGlobalVariable(variableExpression->name->ToString());
         frame->WriteOp(Op::Code::GetGlobal);
         frame->WriteAddress(globalVarAddr);
         return 0;
@@ -107,9 +107,19 @@ namespace Noble::Compiler::Bytecode
     void BytecodeVisitor::DefineVariable(const std::string& name)
     {
         frame->WriteOp(Op::Code::DefineGlobal);
-        frame->WriteAddress(nextGlobalAddress);
+        //If the global is already defined then we redefine it using the same address
+        frame->WriteAddress(globalVariables.contains(name) ? globalVariables[name] : nextGlobalAddress);
 
         //Map the global var to its address for later access.
         globalVariables[name] = nextGlobalAddress++;
+    }
+
+    Address::Single BytecodeVisitor::GetGlobalVariable(const std::string &name)
+    {
+        if (!globalVariables.contains(name))
+        {
+            throw Exceptions::ByteCodeVisitorException("Variable with name '" + name + "' has not been defined.");
+        }
+        return globalVariables[name];
     }
 }
