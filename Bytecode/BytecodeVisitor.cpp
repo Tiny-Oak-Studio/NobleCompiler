@@ -83,7 +83,6 @@ namespace Noble::Compiler::Bytecode
     std::any BytecodeVisitor::Visit(AST::ExpressionStatement* expressionStatement)
     {
         expressionStatement->expression->Accept(this);
-        std::cout << "EXPRSTATE\n";
         frame->WriteOp(Op::Code::Pop);
         return 0;
     }
@@ -91,7 +90,24 @@ namespace Noble::Compiler::Bytecode
     std::any BytecodeVisitor::Visit(AST::VariableStatement* variableStatement)
     {
         //Define Variable
-        std::cout << "VARSTATE\n";
+        if (variableStatement->initialiser)
+        {
+            variableStatement->initialiser->Accept(this);
+        }
+        else
+        {
+            frame->WriteOp(Op::Code::Null);
+        }
+        DefineVariable(variableStatement->name->ToString());
         return 0;
+    }
+
+    void BytecodeVisitor::DefineVariable(const std::string& name)
+    {
+        frame->WriteOp(Op::Code::DefineGlobal);
+        frame->WriteAddress(nextGlobalAddress);
+
+        //Map the global var to its address for later access.
+        globalVariables[name] = nextGlobalAddress++;
     }
 }

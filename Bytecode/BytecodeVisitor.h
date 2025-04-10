@@ -4,6 +4,8 @@
 #include <any>
 #include <vector>
 #include <iostream>
+#include <unordered_map>
+
 #include "../Frame.h"
 #include "../AST/ExpressionVisitor.h"
 #include "../AST/Statement.h"
@@ -17,6 +19,8 @@ namespace Noble::Compiler::Bytecode
         void GenerateOps(std::vector<AST::StatementPtr>& statements, Frame& frame);
     protected:
         Frame* frame = nullptr;
+        std::unordered_map<std::string, Address::Single> globalVariables;
+        Address::Single nextGlobalAddress = 0;
 
         //ExpressionVisitor
         std::any Visit(AST::BinaryExpression* binaryExpression) override;
@@ -28,6 +32,9 @@ namespace Noble::Compiler::Bytecode
         //StatementVisitor
         std::any Visit(AST::ExpressionStatement* expressionStatement) override;
         std::any Visit(AST::VariableStatement* variableStatement) override;
+
+        //Helper methods
+        void DefineVariable(const std::string& name);
     };
 }
 

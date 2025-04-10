@@ -19,7 +19,7 @@ namespace Noble::Compiler
         std::vector<AST::StatementPtr> statements;
         while (!AtEndOfFile())
         {
-            statements.emplace_back(Statement());
+            statements.emplace_back(Declaration());
         }
         return statements;
     }
@@ -122,7 +122,6 @@ namespace Noble::Compiler
         {
             initialiser = Expression();
         }
-
         Consume(Token::Semicolon, "Expect ';' after variable declaration.");
         return std::make_unique<AST::VariableStatement>(name, initialiser);
     }
@@ -236,7 +235,6 @@ namespace Noble::Compiler
         }
         if (Match({Token::Type::Identifier}))
         {
-            std::cout << "Identifier found!\n";
             return std::make_unique<AST::VariableExpression>(Previous());
         }
         return nullptr;

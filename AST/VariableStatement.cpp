@@ -1,7 +1,3 @@
-/**
- * @file VariableStatement.cpp
- * @author brynm
- */
 #include "VariableStatement.h"
 
 #include "StatementVisitor.h"

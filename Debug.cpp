@@ -8,79 +8,83 @@
 
 namespace Noble::Compiler
 {
-    std::string Debug::OpToString(Noble::Core::Op::Code op)
+    std::string Debug::OpToString(Op::Code op)
     {
         std::stringstream ss;
         switch (op)
         {
-            case Noble::Core::Op::Code::Add:          ss << "ADD"; break;
-            case Noble::Core::Op::Code::Constant:     ss << "CST"; break;
-            case Noble::Core::Op::Code::Divide:       ss << "DIV"; break;
-            case Noble::Core::Op::Code::Equal:        ss << "EQL"; break;
-            case Noble::Core::Op::Code::False:        ss << "FAL"; break;
-            case Noble::Core::Op::Code::Greater:      ss << "GTR"; break;
-            case Noble::Core::Op::Code::Less:         ss << "LES"; break;
-            case Noble::Core::Op::Code::Multiply:     ss << "MUL"; break;
-            case Noble::Core::Op::Code::Negate:       ss << "NEG"; break;
-            case Noble::Core::Op::Code::Not:          ss << "NOT"; break;
-            case Noble::Core::Op::Code::Null:         ss << "NUL"; break;
-            case Noble::Core::Op::Code::Return:       ss << "RET"; break;
-            case Noble::Core::Op::Code::Subtract:     ss << "SUB"; break;
-            case Noble::Core::Op::Code::True:         ss << "TRU"; break;
-            case Noble::Core::Op::Code::GreaterEqual: ss << "GEQ"; break;
-            case Noble::Core::Op::Code::LessEqual:    ss << "LEQ"; break;
-            case Noble::Core::Op::Code::NotEqual:     ss << "NEQ"; break;
+            case Op::Code::Add:          ss << "ADD"; break;
+            case Op::Code::Constant:     ss << "CST"; break;
+            case Op::Code::DefineGlobal: ss << "DFG"; break;
+            case Op::Code::Divide:       ss << "DIV"; break;
+            case Op::Code::Equal:        ss << "EQL"; break;
+            case Op::Code::False:        ss << "FAL"; break;
+            case Op::Code::Greater:      ss << "GTR"; break;
+            case Op::Code::GreaterEqual: ss << "GEQ"; break;
+            case Op::Code::Less:         ss << "LES"; break;
+            case Op::Code::LessEqual:    ss << "LEQ"; break;
+            case Op::Code::Multiply:     ss << "MUL"; break;
+            case Op::Code::Negate:       ss << "NEG"; break;
+            case Op::Code::Not:          ss << "NOT"; break;
+            case Op::Code::NotEqual:     ss << "NEQ"; break;
+            case Op::Code::Null:         ss << "NUL"; break;
+            case Op::Code::Pop:          ss << "POP"; break;
+            case Op::Code::PopN:         ss << "PPN"; break;
+            case Op::Code::Print:        ss << "PRT"; break;
+            case Op::Code::Return:       ss << "RET"; break;
+            case Op::Code::Subtract:     ss << "SUB"; break;
+            case Op::Code::True:         ss << "TRU"; break;
             default: ss << "Unknown operation '" << op << "'\n"; break;
         }
         return ss.str();
     }
 
-    std::string Debug::TokenToString(const Noble::Compiler::Token& token)
+    std::string Debug::TokenToString(const Token& token)
     {
         std::stringstream ss;
         switch (token.type)
         {
-            case Noble::Compiler::Token::And:          ss << "And"; break;
-            case Noble::Compiler::Token::Bang:         ss << "Bang"; break;
-            case Noble::Compiler::Token::Class:        ss << "Class"; break;
-            case Noble::Compiler::Token::Comma:        ss << "Comma"; break;
-            case Noble::Compiler::Token::Dot:          ss << "Dot"; break;
-            case Noble::Compiler::Token::Else:         ss << "Else"; break;
-            case Noble::Compiler::Token::Equal:        ss << "Equal"; break;
-            case Noble::Compiler::Token::Error:        ss << "Error"; break;
-            case Noble::Compiler::Token::False:        ss << "False"; break;
-            case Noble::Compiler::Token::For:          ss << "For"; break;
-            case Noble::Compiler::Token::Function:     ss << "Function"; break;
-            case Noble::Compiler::Token::Greater:      ss << "Greater"; break;
-            case Noble::Compiler::Token::Identifier:   ss << "Identifier"; break;
-            case Noble::Compiler::Token::If:           ss << "If"; break;
-            case Noble::Compiler::Token::Less:         ss << "Less"; break;
-            case Noble::Compiler::Token::Minus:        ss << "Minus"; break;
-            case Noble::Compiler::Token::None:         ss << "None"; break;
-            case Noble::Compiler::Token::Null:         ss << "Null"; break;
-            case Noble::Compiler::Token::Number:       ss << "Number"; break;
-            case Noble::Compiler::Token::Or:           ss << "Or"; break;
-            case Noble::Compiler::Token::Plus:         ss << "Plus"; break;
-            case Noble::Compiler::Token::Print:        ss << "Print"; break;
-            case Noble::Compiler::Token::Return:       ss << "Return"; break;
-            case Noble::Compiler::Token::Semicolon:    ss << "Semicolon"; break;
-            case Noble::Compiler::Token::Slash:        ss << "Slash"; break;
-            case Noble::Compiler::Token::Star:         ss << "Star"; break;
-            case Noble::Compiler::Token::String:       ss << "String"; break;
-            case Noble::Compiler::Token::Super:        ss << "Super"; break;
-            case Noble::Compiler::Token::This:         ss << "This"; break;
-            case Noble::Compiler::Token::True:         ss << "True"; break;
-            case Noble::Compiler::Token::Variable:     ss << "Variable"; break;
-            case Noble::Compiler::Token::While:        ss << "While"; break;
-            case Noble::Compiler::Token::BangEqual:    ss << "BangEqual"; break;
-            case Noble::Compiler::Token::EqualEqual:   ss << "EqualEqual"; break;
-            case Noble::Compiler::Token::GreaterEqual: ss << "GreaterEqual"; break;
-            case Noble::Compiler::Token::LeftBrace:    ss << "LeftBrace"; break;
-            case Noble::Compiler::Token::LeftParen:    ss << "LeftParen"; break;
-            case Noble::Compiler::Token::LessEqual:    ss << "LessEqual"; break;
-            case Noble::Compiler::Token::RightBrace:   ss << "RightBrace"; break;
-            case Noble::Compiler::Token::RightParen:   ss << "RightParen"; break;
-            case Noble::Compiler::Token::EndOfFile:    ss << "EndOfFile"; break;
+            case Token::And:          ss << "And"; break;
+            case Token::Bang:         ss << "Bang"; break;
+            case Token::Class:        ss << "Class"; break;
+            case Token::Comma:        ss << "Comma"; break;
+            case Token::Dot:          ss << "Dot"; break;
+            case Token::Else:         ss << "Else"; break;
+            case Token::Equal:        ss << "Equal"; break;
+            case Token::Error:        ss << "Error"; break;
+            case Token::False:        ss << "False"; break;
+            case Token::For:          ss << "For"; break;
+            case Token::Function:     ss << "Function"; break;
+            case Token::Greater:      ss << "Greater"; break;
+            case Token::Identifier:   ss << "Identifier"; break;
+            case Token::If:           ss << "If"; break;
+            case Token::Less:         ss << "Less"; break;
+            case Token::Minus:        ss << "Minus"; break;
+            case Token::None:         ss << "None"; break;
+            case Token::Null:         ss << "Null"; break;
+            case Token::Number:       ss << "Number"; break;
+            case Token::Or:           ss << "Or"; break;
+            case Token::Plus:         ss << "Plus"; break;
+            case Token::Print:        ss << "Print"; break;
+            case Token::Return:       ss << "Return"; break;
+            case Token::Semicolon:    ss << "Semicolon"; break;
+            case Token::Slash:        ss << "Slash"; break;
+            case Token::Star:         ss << "Star"; break;
+            case Token::String:       ss << "String"; break;
+            case Token::Super:        ss << "Super"; break;
+            case Token::This:         ss << "This"; break;
+            case Token::True:         ss << "True"; break;
+            case Token::Variable:     ss << "Variable"; break;
+            case Token::While:        ss << "While"; break;
+            case Token::BangEqual:    ss << "BangEqual"; break;
+            case Token::EqualEqual:   ss << "EqualEqual"; break;
+            case Token::GreaterEqual: ss << "GreaterEqual"; break;
+            case Token::LeftBrace:    ss << "LeftBrace"; break;
+            case Token::LeftParen:    ss << "LeftParen"; break;
+            case Token::LessEqual:    ss << "LessEqual"; break;
+            case Token::RightBrace:   ss << "RightBrace"; break;
+            case Token::RightParen:   ss << "RightParen"; break;
+            case Token::EndOfFile:    ss << "EndOfFile"; break;
             default: ss << "Unknown token '" << token.type << "'\n"; break;
         }
         return ss.str();
@@ -109,6 +113,13 @@ namespace Noble::Compiler
                     const Address::Single constantAddress = frame.ReadAddress(i + 1);
                     debugFile << std::setw(7) << std::setfill('0') << constantAddress << "   ";
                     debugFile << frame.ReadConstant(constantAddress);
+                    i += sizeof(Address::Single);
+                    break;
+                }
+                case Op::Code::DefineGlobal:
+                {
+                    const Address::Single globalVarAddress = frame.ReadAddress(i + 1);
+                    debugFile << std::setw(7) << std::setfill('0') << globalVarAddress << "   ";
                     i += sizeof(Address::Single);
                     break;
                 }
