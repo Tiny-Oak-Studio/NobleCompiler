@@ -8,7 +8,7 @@
 
 namespace Noble::Compiler
 {
-    std::string Debug::OpToString(Op::Code op)
+    std::string Debug::OpToString(const Op::Code op)
     {
         std::stringstream ss;
         switch (op)

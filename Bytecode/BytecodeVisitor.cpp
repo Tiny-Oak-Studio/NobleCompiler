@@ -1,5 +1,6 @@
 #include "BytecodeVisitor.h"
 
+#include "../AST/AssignmentExpression.h"
 #include "../AST/BinaryExpression.h"
 #include "../AST/ExpressionStatement.h"
 #include "../AST/GroupingExpression.h"
@@ -103,6 +104,13 @@ namespace Noble::Compiler::Bytecode
         DefineVariable(variableStatement->name->ToString());
         return 0;
     }
+
+    std::any BytecodeVisitor::Visit(AST::AssignmentExpression *assignmentExpression)
+    {
+        
+        return 0;
+    }
+
 
     void BytecodeVisitor::DefineVariable(const std::string& name)
     {

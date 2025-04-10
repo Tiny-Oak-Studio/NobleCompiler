@@ -1,5 +1,6 @@
 #include "Parser.h"
 
+#include "AST/AssignmentExpression.h"
 #include "AST/VariableExpression.h"
 #include "AST/VariableStatement.h"
 #include "AST/ExpressionStatement.h"
@@ -96,7 +97,29 @@ namespace Noble::Compiler
 
     AST::ExprPtr Parser::Expression()
     {
-        return Equality();
+        return Assignment();
+    }
+
+    AST::ExprPtr Parser::Assignment()
+    {
+        AST::ExprPtr expr = Equality();
+
+        if (Match({Token::Equal}))
+        {
+            const Token* equals = Previous();
+            AST::ExprPtr value = Assignment();
+
+            if (typeid(expr) == typeid(AST::VariableExpression))
+            {
+                const auto varExpr = dynamic_cast<AST::AssignmentExpression*>(expr.get());
+                const Token* name = varExpr->name;
+                return std::make_unique<AST::AssignmentExpression>(name, value);
+            }
+
+            //Error
+            std::cout << "Error assigning value.";
+        }
+        return expr;
     }
 
     AST::StatementPtr Parser::Declaration()

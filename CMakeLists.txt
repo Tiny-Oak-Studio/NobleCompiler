@@ -79,6 +79,8 @@ add_executable(
         AST/StatementVisitor.h
         Exceptions/ByteCodeVisitorException.cpp
         Exceptions/ByteCodeVisitorException.h
+        AST/AssignmentExpression.cpp
+        AST/AssignmentExpression.h
 )
 
 add_executable(
@@ -138,6 +140,8 @@ add_executable(
         AST/StatementVisitor.h
         Exceptions/ByteCodeVisitorException.cpp
         Exceptions/ByteCodeVisitorException.h
+        AST/AssignmentExpression.cpp
+        AST/AssignmentExpression.h
 )
 
 target_link_libraries(
