@@ -33,6 +33,7 @@ namespace Noble::Compiler
             case Op::Code::PopN:         ss << "PPN"; break;
             case Op::Code::Print:        ss << "PRT"; break;
             case Op::Code::Return:       ss << "RET"; break;
+            case Op::Code::SetGlobal:    ss << "SEG"; break;
             case Op::Code::Subtract:     ss << "SUB"; break;
             case Op::Code::True:         ss << "TRU"; break;
             default: ss << "Unknown operation '" << op << "'\n"; break;
@@ -125,6 +126,13 @@ namespace Noble::Compiler
                     break;
                 }
                 case Op::Code::GetGlobal:
+                {
+                    const Address::Single globalVarAddress = frame.ReadAddress(i + 1);
+                    debugFile << std::setw(7) << std::setfill('0') << globalVarAddress << "   ";
+                    i += sizeof(Address::Single);
+                    break;
+                }
+                case Op::Code::SetGlobal:
                 {
                     const Address::Single globalVarAddress = frame.ReadAddress(i + 1);
                     debugFile << std::setw(7) << std::setfill('0') << globalVarAddress << "   ";

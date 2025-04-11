@@ -107,10 +107,20 @@ namespace Noble::Compiler::Bytecode
 
     std::any BytecodeVisitor::Visit(AST::AssignmentExpression *assignmentExpression)
     {
-        
+        if (assignmentExpression->value)
+        {
+            assignmentExpression->value->Accept(this);
+        }
+
+        const std::string variableName = assignmentExpression->name->ToString();
+        if (!globalVariables.contains(variableName))
+        {
+            throw Exceptions::ByteCodeVisitorException("Variable with name '" + variableName + "' has not been defined.");
+        }
+        frame->WriteOp(Op::Code::SetGlobal);
+        frame->WriteAddress(globalVariables[variableName]);
         return 0;
     }
-
 
     void BytecodeVisitor::DefineVariable(const std::string& name)
     {

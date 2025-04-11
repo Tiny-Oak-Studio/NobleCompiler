@@ -109,15 +109,15 @@ namespace Noble::Compiler
             const Token* equals = Previous();
             AST::ExprPtr value = Assignment();
 
-            if (typeid(expr) == typeid(AST::VariableExpression))
+            if (expr->ExpressionType == AST::Expression::Type::Variable)
             {
-                const auto varExpr = dynamic_cast<AST::AssignmentExpression*>(expr.get());
+                const auto* varExpr = static_cast<AST::VariableExpression*>(expr.get());
                 const Token* name = varExpr->name;
                 return std::make_unique<AST::AssignmentExpression>(name, value);
             }
 
             //Error
-            std::cout << "Error assigning value.";
+            std::cout << "Error assigning value.\n";
         }
         return expr;
     }

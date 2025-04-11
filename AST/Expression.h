@@ -14,11 +14,12 @@ namespace Noble::Compiler::AST
         enum Type
         {
             None,
+            Assignment,
             Binary,
             Grouping,
             Literal,
             Unary,
-            Variable
+            Variable,
         };
 
         Type ExpressionType = None;

@@ -7,6 +7,7 @@
 #include <initializer_list>
 #include "Token.h"
 #include "AST/Statement.h"
+#include "AST/Expression.h"
 #include "AST/VariableExpression.h"
 
 namespace Noble::Compiler
