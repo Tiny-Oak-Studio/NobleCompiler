@@ -1,16 +1,25 @@
 #include "Printer.h"
 
+#include "AssignmentExpression.h"
 #include "BinaryExpression.h"
 #include "Expression.h"
+#include "ExpressionStatement.h"
 #include "GroupingExpression.h"
 #include "LiteralExpression.h"
 #include "UnaryExpression.h"
+#include "VariableExpression.h"
+#include "VariableStatement.h"
 
 namespace Noble::Compiler::AST
 {
     std::string Printer::Print(Expression *expression)
     {
         return std::any_cast<std::string>(expression->Accept(this));
+    }
+
+    std::string Printer::Print(Statement* statement)
+    {
+        return std::any_cast<std::string>(statement->Accept(this));
     }
 
     std::any Printer::Visit(BinaryExpression* binaryExpression) {
@@ -35,7 +44,22 @@ namespace Noble::Compiler::AST
 
     std::any Printer::Visit(VariableExpression* variableExpression)
     {
-        return 0;
+        return variableExpression->name->ToString();
+    }
+
+    std::any Printer::Visit(AssignmentExpression* assignmentExpression)
+    {
+        return assignmentExpression->name->ToString() + " = ";
+    }
+
+    std::any Printer::Visit(ExpressionStatement* expressionStatement)
+    {
+        return expressionStatement->expression->Accept(this);
+    }
+
+    std::any Printer::Visit(VariableStatement* variableStatement)
+    {
+        return variableStatement->name->ToString();
     }
 
     std::any Printer::Parenthesize(const std::string& name, const std::initializer_list<Expression*> expressions)
