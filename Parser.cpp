@@ -1,9 +1,12 @@
 #include "Parser.h"
 
+#include <chrono>
+
 #include "AST/AssignmentExpression.h"
 #include "AST/VariableExpression.h"
 #include "AST/VariableStatement.h"
 #include "AST/ExpressionStatement.h"
+#include "AST/BlockStatement.h"
 #include "Exceptions/ParseException.h"
 #include "AST/BinaryExpression.h"
 #include "AST/UnaryExpression.h"
@@ -151,6 +154,11 @@ namespace Noble::Compiler
 
     AST::StatementPtr Parser::Statement()
     {
+        if (Match({Token::Type::LeftBrace}))
+        {
+            std::vector<AST::StatementPtr> statements = Block();
+            return std::make_unique<AST::BlockStatement>(statements);
+        }
         return ExpressionStatement();
     }
 
@@ -262,4 +270,16 @@ namespace Noble::Compiler
         }
         return nullptr;
     }
+
+    std::vector<AST::StatementPtr> Parser::Block()
+    {
+        std::vector<AST::StatementPtr> statements;
+        while (!Check(Token::Type::RightBrace) and !AtEndOfFile())
+        {
+            statements.emplace_back(Declaration());
+        }
+        Consume(Token::Type::RightBrace, "Expect '}' after block.");
+        return statements;
+    }
+
 }

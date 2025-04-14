@@ -18,10 +18,9 @@ TEST(CompilerTests, Startup)
     compiler.Compile(NGPLSource, "test");
 }
 
-
 TEST(CompilerTests, GlobalVariableSum)
 {
     Noble::Compiler::Compiler compiler;
-    const std::string NGPLSource = "var test_var = 3; var test_a = 21; var test_b = test_var + test_b;";
+    const std::string NGPLSource = "var testVar = 3; var testA = 21; var testB = testVar + testA;";
     compiler.Compile(NGPLSource, "test");
 }

@@ -2,6 +2,7 @@
 
 #include "../AST/AssignmentExpression.h"
 #include "../AST/BinaryExpression.h"
+#include "../AST/BlockStatement.h"
 #include "../AST/ExpressionStatement.h"
 #include "../AST/GroupingExpression.h"
 #include "../AST/LiteralExpression.h"
@@ -77,9 +78,18 @@ namespace Noble::Compiler::Bytecode
 
     std::any BytecodeVisitor::Visit(AST::VariableExpression* variableExpression)
     {
-        const Address::Single globalVarAddr = GetGlobalVariable(variableExpression->name->ToString());
-        frame->WriteOp(Op::Code::GetGlobal);
-        frame->WriteAddress(globalVarAddr);
+        const std::string variableName = variableExpression->name->ToString();
+        if (const int varIndex = ResolveLocal(variableName); varIndex != -1)
+        {
+            frame->WriteOp(Op::Code::GetLocal);
+            frame->WriteAddress(static_cast<Address::Single>(varIndex));
+        }
+        else
+        {
+            const Address::Single globalVarAddr = GetGlobalVariable(variableName);
+            frame->WriteOp(Op::Code::GetGlobal);
+            frame->WriteAddress(globalVarAddr);
+        }
         return 0;
     }
 
@@ -105,6 +115,18 @@ namespace Noble::Compiler::Bytecode
         return 0;
     }
 
+    std::any BytecodeVisitor::Visit(AST::BlockStatement *blockStatement)
+    {
+        BeginScope();
+        for (const auto& statement : blockStatement->statements)
+        {
+            statement->Accept(this);
+        }
+        EndScope();
+        return 0;
+    }
+
+
     std::any BytecodeVisitor::Visit(AST::AssignmentExpression *assignmentExpression)
     {
         if (assignmentExpression->value)
@@ -117,19 +139,52 @@ namespace Noble::Compiler::Bytecode
         {
             throw Exceptions::ByteCodeVisitorException("Variable with name '" + variableName + "' has not been defined.");
         }
-        frame->WriteOp(Op::Code::SetGlobal);
-        frame->WriteAddress(globalVariables[variableName]);
+
+        if (const int varIndex = ResolveLocal(variableName); varIndex != -1)
+        {
+            frame->WriteOp(Op::Code::SetLocal);
+            frame->WriteAddress(static_cast<Address::Single>(varIndex));
+        }
+        else
+        {
+            frame->WriteOp(Op::Code::SetGlobal);
+            frame->WriteAddress(globalVariables[variableName]);
+        }
         return 0;
     }
 
     void BytecodeVisitor::DefineVariable(const std::string& name)
     {
+        DeclareLocalVariable(name);
+        if (scopeDepth > 0) return; //For local variables
+
         frame->WriteOp(Op::Code::DefineGlobal);
         //If the global is already defined then we redefine it using the same address
         frame->WriteAddress(globalVariables.contains(name) ? globalVariables[name] : nextGlobalAddress);
 
         //Map the global var to its address for later access.
         globalVariables[name] = nextGlobalAddress++;
+    }
+
+    void BytecodeVisitor::DeclareLocalVariable(const std::string& name)
+    {
+        if (scopeDepth == 0) return;
+
+        for (auto& [localName, depth] : localVariables)
+        {
+            if (depth != -1 and depth < scopeDepth) break;
+
+            if (localName == name)
+            {
+                throw Exceptions::ByteCodeVisitorException("Variable with the name '" + name + "' already exists.");
+            }
+        }
+        AddLocal(name);
+    }
+
+    void BytecodeVisitor::AddLocal(const std::string& name)
+    {
+        localVariables.emplace_back(LocalVariable {name, scopeDepth});
     }
 
     Address::Single BytecodeVisitor::GetGlobalVariable(const std::string &name)
@@ -139,5 +194,37 @@ namespace Noble::Compiler::Bytecode
             throw Exceptions::ByteCodeVisitorException("Variable with name '" + name + "' has not been defined.");
         }
         return globalVariables[name];
+    }
+
+    int BytecodeVisitor::ResolveLocal(const std::string &name) const
+    {
+        for (int i = static_cast<int>(localVariables.size()) - 1; i >= 0; i--)
+        {
+            if (name == localVariables[i].name) return i;
+        }
+        return -1;
+    }
+
+    void BytecodeVisitor::BeginScope()
+    {
+        scopeDepth++;
+    }
+
+    void BytecodeVisitor::EndScope()
+    {
+        scopeDepth--;
+
+        Address::Single popCount = 0;
+        while (!localVariables.empty() and localVariables.back().depth > scopeDepth)
+        {
+            popCount++;
+            localVariables.pop_back();
+        }
+        //Don't pop if there were no local variables to pop on the stack
+        if (popCount > 0)
+        {
+            frame->WriteOp(Op::Code::PopN);
+            frame->WriteAddress(popCount);
+        }
     }
 }

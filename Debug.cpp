@@ -20,6 +20,7 @@ namespace Noble::Compiler
             case Op::Code::Equal:        ss << "EQL"; break;
             case Op::Code::False:        ss << "FAL"; break;
             case Op::Code::GetGlobal:    ss << "GEG"; break;
+            case Op::Code::GetLocal:     ss << "GEL"; break;
             case Op::Code::Greater:      ss << "GTR"; break;
             case Op::Code::GreaterEqual: ss << "GEQ"; break;
             case Op::Code::Less:         ss << "LES"; break;
@@ -34,6 +35,7 @@ namespace Noble::Compiler
             case Op::Code::Print:        ss << "PRT"; break;
             case Op::Code::Return:       ss << "RET"; break;
             case Op::Code::SetGlobal:    ss << "SEG"; break;
+            case Op::Code::SetLocal:     ss << "SEL"; break;
             case Op::Code::Subtract:     ss << "SUB"; break;
             case Op::Code::True:         ss << "TRU"; break;
             default: ss << "Unknown operation '" << op << "'\n"; break;
@@ -133,6 +135,27 @@ namespace Noble::Compiler
                     break;
                 }
                 case Op::Code::SetGlobal:
+                {
+                    const Address::Single globalVarAddress = frame.ReadAddress(i + 1);
+                    debugFile << std::setw(7) << std::setfill('0') << globalVarAddress << "   ";
+                    i += sizeof(Address::Single);
+                    break;
+                }
+                case Op::Code::SetLocal:
+                {
+                    const Address::Single globalVarAddress = frame.ReadAddress(i + 1);
+                    debugFile << std::setw(7) << std::setfill('0') << globalVarAddress << "   ";
+                    i += sizeof(Address::Single);
+                    break;
+                }
+                case Op::Code::GetLocal:
+                {
+                    const Address::Single globalVarAddress = frame.ReadAddress(i + 1);
+                    debugFile << std::setw(7) << std::setfill('0') << globalVarAddress << "   ";
+                    i += sizeof(Address::Single);
+                    break;
+                }
+                case Op::Code::PopN:
                 {
                     const Address::Single globalVarAddress = frame.ReadAddress(i + 1);
                     debugFile << std::setw(7) << std::setfill('0') << globalVarAddress << "   ";

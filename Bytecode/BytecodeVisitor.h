@@ -6,6 +6,7 @@
 #include <unordered_map>
 
 #include "../Frame.h"
+#include "../Token.h"
 #include "../AST/ExpressionVisitor.h"
 #include "../AST/Statement.h"
 #include "../AST/StatementVisitor.h"
@@ -34,6 +35,16 @@ namespace Noble::Compiler::Bytecode
          */
         void GenerateOps(std::vector<AST::StatementPtr>& statements, Frame& frame);
     protected:
+        /**
+         * @struct LocalVariable
+         * @brief Represents a local variable.
+         */
+        struct LocalVariable
+        {
+            std::string name;
+            int depth = -1;
+        };
+
         /// @brief The current frame being written to by this BytecodeVisitor object.
         Frame* frame = nullptr;
 
@@ -42,6 +53,12 @@ namespace Noble::Compiler::Bytecode
 
         /// @brief The address to assign to the next declared global variable.
         Address::Single nextGlobalAddress = 0;
+
+        /// @brief Stores all active local variables.
+        std::vector<LocalVariable> localVariables;
+
+        /// @brief
+        int scopeDepth = 0;
 
         //ExpressionVisitor overrides
         std::any Visit(AST::BinaryExpression* binaryExpression) override;
@@ -54,6 +71,7 @@ namespace Noble::Compiler::Bytecode
         //StatementVisitor overrides
         std::any Visit(AST::ExpressionStatement* expressionStatement) override;
         std::any Visit(AST::VariableStatement* variableStatement) override;
+        std::any Visit(AST::BlockStatement* blockStatement) override;
 
         //Helper methods
         /**
@@ -63,12 +81,25 @@ namespace Noble::Compiler::Bytecode
         void DefineVariable(const std::string& name);
 
         /**
+         * @brief Declares a local variable.
+         */
+        void DeclareLocalVariable(const std::string& name);
+
+        void AddLocal(const std::string& name);
+
+        /**
          * @brief Gets the address of a global variable from its name.
          * @param name The name of the global variable for which we want to get the address.
          * @throws ByteCodeException if the name does not match any previously declared global variable.
          * @return The address of the named global variable.
          */
         Address::Single GetGlobalVariable(const std::string& name);
+
+        int ResolveLocal(const std::string& name) const;
+
+        void BeginScope();
+
+        void EndScope();
     };
 }
 
