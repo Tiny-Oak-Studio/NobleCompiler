@@ -18,8 +18,10 @@ namespace Noble::Compiler
         /// @brief Writes an op to this frame's underlying array
         void WriteOp(const Op::Type& op);
 
-        /// @brief Writes an address into the frame's underlying array
-        void WriteAddress(const Address::Single& address);
+        /// @brief Writes an address into the frame's underlying array, returns the index of the written address
+        Address::Single WriteAddress(const Address::Single& address);
+
+        void WriteAddress(const Address::Single& address, const Address::Single& addressIndex);
 
         /// @brief Writes the value to the ops array.
         void WriteConstant(ValueType value);

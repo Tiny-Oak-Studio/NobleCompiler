@@ -72,6 +72,7 @@ namespace Noble::Compiler::Bytecode
         std::any Visit(AST::ExpressionStatement* expressionStatement) override;
         std::any Visit(AST::VariableStatement* variableStatement) override;
         std::any Visit(AST::BlockStatement* blockStatement) override;
+        std::any Visit(AST::IfStatement* ifStatement) override;
 
         //Helper methods
         /**

@@ -1,5 +1,7 @@
 #include "Frame.h"
 
+#include <bits/ranges_base.h>
+
 namespace Noble::Compiler
 {
     void Frame::WriteOp(const Op::Type &op)
@@ -7,9 +9,20 @@ namespace Noble::Compiler
         ops.Add(op);
     }
 
-    void Frame::WriteAddress(const Address::Single &address)
+    Address::Single Frame::WriteAddress(const Address::Single &address)
     {
+        const Address::Single addressAddr = ops.Count();
         ops.Add(Translation::AddressToOps(address));
+        return addressAddr;
+    }
+
+    void Frame::WriteAddress(const Address::Single &address, const Address::Single &addressIndex)
+    {
+        const List<Op::Type> addressOps = Translation::AddressToOps(address);
+        for (int i = 0; i < addressOps.Count(); ++i)
+        {
+            ops[i + addressIndex] = addressOps[i];
+        }
     }
 
     void Frame::WriteConstant(const ValueType value)

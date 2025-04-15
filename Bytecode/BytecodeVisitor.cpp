@@ -5,6 +5,7 @@
 #include "../AST/BlockStatement.h"
 #include "../AST/ExpressionStatement.h"
 #include "../AST/GroupingExpression.h"
+#include "../AST/IfStatement.h"
 #include "../AST/LiteralExpression.h"
 #include "../AST/UnaryExpression.h"
 #include "../AST/VariableExpression.h"
@@ -32,7 +33,9 @@ namespace Noble::Compiler::Bytecode
         switch (binaryExpression->operation->type)
         {
             case Token::Type::EqualEqual:   frame->WriteOp(Op::Code::Equal);        break;
+            case Token::Type::Greater:      frame->WriteOp(Op::Code::Greater);      break;
             case Token::Type::GreaterEqual: frame->WriteOp(Op::Code::GreaterEqual); break;
+            case Token::Type::Less:         frame->WriteOp(Op::Code::Less);         break;
             case Token::Type::LessEqual:    frame->WriteOp(Op::Code::LessEqual);    break;
             case Token::Type::Minus:        frame->WriteOp(Op::Code::Subtract);     break;
             case Token::Type::Plus:         frame->WriteOp(Op::Code::Add);          break;
@@ -153,10 +156,31 @@ namespace Noble::Compiler::Bytecode
         return 0;
     }
 
+    std::any BytecodeVisitor::Visit(AST::IfStatement* ifStatement)
+    {
+        ifStatement->condition->Accept(this);
+        frame->WriteOp(Op::Code::JumpIfFalse);
+        const Address::Single thenJumpIndex = frame->WriteAddress(0); //Write empty address for back-patching later.
+        ifStatement->thenBranch->Accept(this);
+        frame->WriteOp(Op::Code::Jump);
+        const Address::Single elseJumpIndex = frame->WriteAddress(0); //For back-patching
+        frame->WriteAddress(frame->GetOps().Count() - thenJumpIndex, thenJumpIndex); //Back-patch
+        if (ifStatement->elseBranch)
+        {
+            ifStatement->elseBranch->Accept(this);
+        }
+        frame->WriteAddress(frame->GetOps().Count() - elseJumpIndex, elseJumpIndex);
+        return 0;
+    }
+
     void BytecodeVisitor::DefineVariable(const std::string& name)
     {
         DeclareLocalVariable(name);
-        if (scopeDepth > 0) return; //For local variables
+        if (scopeDepth > 0) //For local variables
+        {
+            localVariables.back().depth = scopeDepth;
+            return;
+        }
 
         frame->WriteOp(Op::Code::DefineGlobal);
         //If the global is already defined then we redefine it using the same address
@@ -184,7 +208,7 @@ namespace Noble::Compiler::Bytecode
 
     void BytecodeVisitor::AddLocal(const std::string& name)
     {
-        localVariables.emplace_back(LocalVariable {name, scopeDepth});
+        localVariables.emplace_back(LocalVariable {name, -1});
     }
 
     Address::Single BytecodeVisitor::GetGlobalVariable(const std::string &name)
@@ -200,7 +224,11 @@ namespace Noble::Compiler::Bytecode
     {
         for (int i = static_cast<int>(localVariables.size()) - 1; i >= 0; i--)
         {
-            if (name == localVariables[i].name) return i;
+            if (auto [localName, localDepth] = localVariables[i]; name == localName)
+            {
+                if (localDepth == -1) throw Exceptions::ByteCodeVisitorException("Can't read variable in its own initialiser.");
+                return i;
+            }
         }
         return -1;
     }

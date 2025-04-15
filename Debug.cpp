@@ -23,6 +23,8 @@ namespace Noble::Compiler
             case Op::Code::GetLocal:     ss << "GEL"; break;
             case Op::Code::Greater:      ss << "GTR"; break;
             case Op::Code::GreaterEqual: ss << "GEQ"; break;
+            case Op::Code::Jump:         ss << "JMP"; break;
+            case Op::Code::JumpIfFalse:  ss << "JIF"; break;
             case Op::Code::Less:         ss << "LES"; break;
             case Op::Code::LessEqual:    ss << "LEQ"; break;
             case Op::Code::Multiply:     ss << "MUL"; break;
@@ -156,6 +158,20 @@ namespace Noble::Compiler
                     break;
                 }
                 case Op::Code::PopN:
+                {
+                    const Address::Single globalVarAddress = frame.ReadAddress(i + 1);
+                    debugFile << std::setw(7) << std::setfill('0') << globalVarAddress << "   ";
+                    i += sizeof(Address::Single);
+                    break;
+                }
+                case Op::Code::Jump:
+                {
+                    const Address::Single globalVarAddress = frame.ReadAddress(i + 1);
+                    debugFile << std::setw(7) << std::setfill('0') << globalVarAddress << "   ";
+                    i += sizeof(Address::Single);
+                    break;
+                }
+                case Op::Code::JumpIfFalse:
                 {
                     const Address::Single globalVarAddress = frame.ReadAddress(i + 1);
                     debugFile << std::setw(7) << std::setfill('0') << globalVarAddress << "   ";

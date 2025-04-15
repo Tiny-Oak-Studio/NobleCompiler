@@ -83,6 +83,8 @@ add_executable(
         Exceptions/ByteCodeVisitorException.h
         AST/BlockStatement.cpp
         AST/BlockStatement.h
+        AST/IfStatement.cpp
+        AST/IfStatement.h
 )
 
 add_executable(
@@ -146,6 +148,8 @@ add_executable(
         AST/AssignmentExpression.h
         AST/BlockStatement.cpp
         AST/BlockStatement.h
+        AST/IfStatement.cpp
+        AST/IfStatement.h
 )
 
 target_link_libraries(

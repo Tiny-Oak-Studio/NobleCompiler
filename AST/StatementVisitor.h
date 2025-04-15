@@ -11,6 +11,7 @@ namespace Noble::Compiler::AST
         virtual std::any Visit(struct VariableStatement* variableStatement) = 0;
         virtual std::any Visit(struct ExpressionStatement* statement) = 0;
         virtual std::any Visit(struct BlockStatement* blockStatement) = 0;
+        virtual std::any Visit(struct IfStatement* ifStatement) = 0;
     };
 } //Noble::Compiler::AST
 

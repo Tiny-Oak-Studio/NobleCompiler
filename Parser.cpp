@@ -6,6 +6,7 @@
 #include "AST/VariableExpression.h"
 #include "AST/VariableStatement.h"
 #include "AST/ExpressionStatement.h"
+#include "AST/IfStatement.h"
 #include "AST/BlockStatement.h"
 #include "Exceptions/ParseException.h"
 #include "AST/BinaryExpression.h"
@@ -159,6 +160,10 @@ namespace Noble::Compiler
             std::vector<AST::StatementPtr> statements = Block();
             return std::make_unique<AST::BlockStatement>(statements);
         }
+        if (Match({Token::Type::If}))
+        {
+            return IfStatement();
+        }
         return ExpressionStatement();
     }
 
@@ -176,6 +181,17 @@ namespace Noble::Compiler
         return nullptr;//std::make_unique<AST::PrintStatement>(expression);
     }
 
+    AST::StatementPtr Parser::IfStatement()
+    {
+        Consume(Token::Type::LeftParen, "Expect '(' after 'if'.");
+        AST::ExprPtr condition = Expression();
+        Consume(Token::Type::RightParen, "Expect ')' after 'if' condition.");
+
+        AST::StatementPtr thenBranch = Statement();
+        AST::StatementPtr elseBranch = Match({Token::Type::Else}) ? Statement() : nullptr;
+
+        return std::make_unique<AST::IfStatement>(condition, thenBranch, elseBranch);
+    }
 
     AST::ExprPtr Parser::Equality()
     {

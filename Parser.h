@@ -50,6 +50,7 @@ namespace Noble::Compiler
         AST::StatementPtr Statement();
         AST::StatementPtr ExpressionStatement();
         AST::StatementPtr PrintStatement();
+        AST::StatementPtr IfStatement();
         AST::ExprPtr Equality();
         AST::ExprPtr Comparison();
         AST::ExprPtr Term();
