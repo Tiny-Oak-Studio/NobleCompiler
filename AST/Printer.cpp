@@ -52,6 +52,12 @@ namespace Noble::Compiler::AST
         return assignmentExpression->name->ToString() + " = ";
     }
 
+    std::any Printer::Visit(LogicalExpression *logicalExpression)
+    {
+        return std::string();
+    }
+
+
     std::any Printer::Visit(ExpressionStatement* expressionStatement)
     {
         return expressionStatement->expression->Accept(this);
@@ -60,6 +66,26 @@ namespace Noble::Compiler::AST
     std::any Printer::Visit(VariableStatement* variableStatement)
     {
         return variableStatement->name->ToString();
+    }
+
+    std::any Printer::Visit(BlockStatement *blockStatement)
+    {
+        return std::string();
+    }
+
+    std::any Printer::Visit(IfStatement *ifStatement)
+    {
+        return std::string();
+    }
+
+    std::any Printer::Visit(WhileStatement* whileStatement)
+    {
+        return std::string();
+    }
+
+    std::any Printer::Visit(ForStatement* forStatement)
+    {
+        return std::string();
     }
 
     std::any Printer::Parenthesize(const std::string& name, const std::initializer_list<Expression*> expressions)

@@ -24,3 +24,17 @@ TEST(CompilerTests, GlobalVariableSum)
     const std::string NGPLSource = "var testVar = 3; var testA = 21; var testB = testVar + testA;";
     compiler.Compile(NGPLSource, "test");
 }
+
+TEST(CompilerTests, WhileNoBody)
+{
+    Noble::Compiler::Compiler compiler;
+    const std::string NGPLSource = "while (1 < 1) { }";
+    compiler.Compile(NGPLSource, "test");
+}
+
+TEST(CompilerTests, ForNoBody)
+{
+    Noble::Compiler::Compiler compiler;
+    const std::string NGPLSource = "for (var i = 0; i < 10; i = i + 1) { }";
+    compiler.Compile(NGPLSource, "test");
+}

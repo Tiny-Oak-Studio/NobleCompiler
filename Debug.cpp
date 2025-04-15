@@ -14,6 +14,9 @@ namespace Noble::Compiler
         switch (op)
         {
             case Op::Code::Add:          ss << "ADD"; break;
+            case Op::Code::BitwiseAnd:   ss << "BWA"; break;
+            case Op::Code::BitwiseOr:    ss << "BWO"; break;
+            case Op::Code::BitwiseXor:   ss << "BWX"; break;
             case Op::Code::Constant:     ss << "CST"; break;
             case Op::Code::DefineGlobal: ss << "DFG"; break;
             case Op::Code::Divide:       ss << "DIV"; break;
@@ -25,8 +28,12 @@ namespace Noble::Compiler
             case Op::Code::GreaterEqual: ss << "GEQ"; break;
             case Op::Code::Jump:         ss << "JMP"; break;
             case Op::Code::JumpIfFalse:  ss << "JIF"; break;
+            case Op::Code::JumpIfTrue:   ss << "JIT"; break;
             case Op::Code::Less:         ss << "LES"; break;
             case Op::Code::LessEqual:    ss << "LEQ"; break;
+            case Op::Code::LogicalAnd:   ss << "LGA"; break;
+            case Op::Code::LogicalOr:    ss << "LOR"; break;
+            case Op::Code::Loop:         ss << "LOP"; break;
             case Op::Code::Multiply:     ss << "MUL"; break;
             case Op::Code::Negate:       ss << "NEG"; break;
             case Op::Code::Not:          ss << "NOT"; break;
@@ -40,7 +47,7 @@ namespace Noble::Compiler
             case Op::Code::SetLocal:     ss << "SEL"; break;
             case Op::Code::Subtract:     ss << "SUB"; break;
             case Op::Code::True:         ss << "TRU"; break;
-            default: ss << "Unknown operation '" << op << "'\n"; break;
+            default: ss << "Unknown operation '" << static_cast<char>(op) << "'\n"; break;
         }
         return ss.str();
     }
@@ -172,6 +179,20 @@ namespace Noble::Compiler
                     break;
                 }
                 case Op::Code::JumpIfFalse:
+                {
+                    const Address::Single globalVarAddress = frame.ReadAddress(i + 1);
+                    debugFile << std::setw(7) << std::setfill('0') << globalVarAddress << "   ";
+                    i += sizeof(Address::Single);
+                    break;
+                }
+                case Op::Code::JumpIfTrue:
+                {
+                    const Address::Single globalVarAddress = frame.ReadAddress(i + 1);
+                    debugFile << std::setw(7) << std::setfill('0') << globalVarAddress << "   ";
+                    i += sizeof(Address::Single);
+                    break;
+                }
+                case Op::Code::Loop:
                 {
                     const Address::Single globalVarAddress = frame.ReadAddress(i + 1);
                     debugFile << std::setw(7) << std::setfill('0') << globalVarAddress << "   ";

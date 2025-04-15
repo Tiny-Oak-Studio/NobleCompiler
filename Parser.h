@@ -45,12 +45,16 @@ namespace Noble::Compiler
 
         AST::ExprPtr Expression();
         AST::ExprPtr Assignment();
+        AST::ExprPtr Or();
+        AST::ExprPtr And();
         AST::StatementPtr Declaration();
         AST::StatementPtr VariableDeclaration();
         AST::StatementPtr Statement();
         AST::StatementPtr ExpressionStatement();
         AST::StatementPtr PrintStatement();
         AST::StatementPtr IfStatement();
+        AST::StatementPtr WhileStatement();
+        AST::StatementPtr ForStatement();
         AST::ExprPtr Equality();
         AST::ExprPtr Comparison();
         AST::ExprPtr Term();

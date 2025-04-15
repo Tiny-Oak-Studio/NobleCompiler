@@ -67,12 +67,15 @@ namespace Noble::Compiler::Bytecode
         std::any Visit(AST::UnaryExpression* unaryExpression) override;
         std::any Visit(AST::VariableExpression* variableExpression) override;
         std::any Visit(AST::AssignmentExpression *assignmentExpression) override;
+        std::any Visit(AST::LogicalExpression* logicalExpression) override;
 
         //StatementVisitor overrides
         std::any Visit(AST::ExpressionStatement* expressionStatement) override;
         std::any Visit(AST::VariableStatement* variableStatement) override;
         std::any Visit(AST::BlockStatement* blockStatement) override;
         std::any Visit(AST::IfStatement* ifStatement) override;
+        std::any Visit(AST::WhileStatement* whileStatement) override;
+        std::any Visit(AST::ForStatement *forStatement) override;
 
         //Helper methods
         /**
@@ -101,6 +104,12 @@ namespace Noble::Compiler::Bytecode
         void BeginScope();
 
         void EndScope();
+
+        Address::Single WriteJump(Op::Code jumpCode) const;
+
+        void PatchJump(const Address::Single jumpAddr) const;
+
+        void WriteLoop(const Address::Single loopStart) const;
     };
 }
 

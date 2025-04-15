@@ -7,12 +7,15 @@
 #include "AST/VariableStatement.h"
 #include "AST/ExpressionStatement.h"
 #include "AST/IfStatement.h"
+#include "AST/WhileStatement.h"
 #include "AST/BlockStatement.h"
+#include "AST/ForStatement.h"
 #include "Exceptions/ParseException.h"
 #include "AST/BinaryExpression.h"
 #include "AST/UnaryExpression.h"
 #include "AST/LiteralExpression.h"
 #include "AST/GroupingExpression.h"
+#include "AST/LogicalExpression.h"
 
 namespace Noble::Compiler
 {
@@ -106,7 +109,7 @@ namespace Noble::Compiler
 
     AST::ExprPtr Parser::Assignment()
     {
-        AST::ExprPtr expr = Equality();
+        AST::ExprPtr expr = Or();
 
         if (Match({Token::Equal}))
         {
@@ -122,6 +125,32 @@ namespace Noble::Compiler
 
             //Error
             std::cout << "Error assigning value.\n";
+        }
+        return expr;
+    }
+
+    AST::ExprPtr Parser::Or()
+    {
+        AST::ExprPtr expr = And();
+
+        while (Match({Token::Type::Or}))
+        {
+            const Token* operation = Previous();
+            AST::ExprPtr right = And();
+            expr = std::make_unique<AST::LogicalExpression>(expr, operation, right);
+        }
+        return expr;
+    }
+
+    AST::ExprPtr Parser::And()
+    {
+        AST::ExprPtr expr = Equality();
+
+        while (Match({Token::Type::And}))
+        {
+            const Token* operation = Previous();
+            AST::ExprPtr right = Equality();
+            expr = std::make_unique<AST::LogicalExpression>(expr, operation, right);
         }
         return expr;
     }
@@ -155,14 +184,22 @@ namespace Noble::Compiler
 
     AST::StatementPtr Parser::Statement()
     {
+        if (Match({Token::Type::If}))
+        {
+            return IfStatement();
+        }
+        if (Match({Token::Type::While}))
+        {
+            return WhileStatement();
+        }
+        if (Match({Token::Type::For}))
+        {
+            return ForStatement();
+        }
         if (Match({Token::Type::LeftBrace}))
         {
             std::vector<AST::StatementPtr> statements = Block();
             return std::make_unique<AST::BlockStatement>(statements);
-        }
-        if (Match({Token::Type::If}))
-        {
-            return IfStatement();
         }
         return ExpressionStatement();
     }
@@ -191,6 +228,52 @@ namespace Noble::Compiler
         AST::StatementPtr elseBranch = Match({Token::Type::Else}) ? Statement() : nullptr;
 
         return std::make_unique<AST::IfStatement>(condition, thenBranch, elseBranch);
+    }
+
+    AST::StatementPtr Parser::WhileStatement()
+    {
+        Consume(Token::Type::LeftParen, "Expect '(' after 'while' statement.");
+        AST::ExprPtr condition = Expression();
+        Consume(Token::Type::RightParen, "Expect ')' after while statement condition.");
+        AST::StatementPtr body = Statement();
+
+        return std::make_unique<AST::WhileStatement>(condition, body);
+    }
+
+    AST::StatementPtr Parser::ForStatement()
+    {
+        Consume(Token::Type::LeftParen, "Expect '(' after 'for'.");
+        AST::StatementPtr initialiser;
+        if (Match({Token::Type::Semicolon}))
+        {
+            initialiser = nullptr;
+        }
+        else if (Match({Token::Type::Variable}))
+        {
+            initialiser = VariableDeclaration();
+        }
+        else
+        {
+            initialiser = ExpressionStatement();
+        }
+
+        AST::ExprPtr condition = nullptr;
+        if (!Check({Token::Type::Semicolon}))
+        {
+            condition = Expression();
+        }
+        Consume(Token::Type::Semicolon, "Expect ';' after loop condition.");
+
+        AST::ExprPtr increment = nullptr;
+        if (!Check({Token::Type::RightParen}))
+        {
+            increment = Expression();
+        }
+        Consume(Token::Type::RightParen, "Expect ')' after 'for' clauses.");
+
+        AST::StatementPtr body = Statement();
+
+        return std::make_unique<AST::ForStatement>(initialiser, condition, increment, body);
     }
 
     AST::ExprPtr Parser::Equality()

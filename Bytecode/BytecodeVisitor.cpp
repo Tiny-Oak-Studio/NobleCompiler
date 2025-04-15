@@ -4,12 +4,15 @@
 #include "../AST/BinaryExpression.h"
 #include "../AST/BlockStatement.h"
 #include "../AST/ExpressionStatement.h"
+#include "../AST/ForStatement.h"
 #include "../AST/GroupingExpression.h"
 #include "../AST/IfStatement.h"
 #include "../AST/LiteralExpression.h"
+#include "../AST/LogicalExpression.h"
 #include "../AST/UnaryExpression.h"
 #include "../AST/VariableExpression.h"
 #include "../AST/VariableStatement.h"
+#include "../AST/WhileStatement.h"
 
 namespace Noble::Compiler::Bytecode
 {
@@ -138,40 +141,97 @@ namespace Noble::Compiler::Bytecode
         }
 
         const std::string variableName = assignmentExpression->name->ToString();
-        if (!globalVariables.contains(variableName))
-        {
-            throw Exceptions::ByteCodeVisitorException("Variable with name '" + variableName + "' has not been defined.");
-        }
+
 
         if (const int varIndex = ResolveLocal(variableName); varIndex != -1)
         {
             frame->WriteOp(Op::Code::SetLocal);
             frame->WriteAddress(static_cast<Address::Single>(varIndex));
         }
-        else
+        else if (globalVariables.contains(variableName))
         {
             frame->WriteOp(Op::Code::SetGlobal);
             frame->WriteAddress(globalVariables[variableName]);
         }
+        else
+        {
+            throw Exceptions::ByteCodeVisitorException("Variable with name '" + variableName + "' has not been defined.");
+        }
+        return 0;
+    }
+
+    std::any BytecodeVisitor::Visit(AST::LogicalExpression* logicalExpression)
+    {
+        const Token::Type operationType = logicalExpression->operation->type;
+        logicalExpression->left->Accept(this);
+        const Address::Single endJump = WriteJump(operationType == Token::Type::Or ? Op::Code::JumpIfTrue : Op::Code::JumpIfFalse);
+        frame->WriteOp(Op::Code::Pop);
+        logicalExpression->right->Accept(this);
+        PatchJump(endJump);
         return 0;
     }
 
     std::any BytecodeVisitor::Visit(AST::IfStatement* ifStatement)
     {
         ifStatement->condition->Accept(this);
-        frame->WriteOp(Op::Code::JumpIfFalse);
-        const Address::Single thenJumpIndex = frame->WriteAddress(0); //Write empty address for back-patching later.
+        const Address::Single thenJumpIndex = WriteJump(Op::Code::JumpIfFalse); //Write empty address for back-patching later.
         ifStatement->thenBranch->Accept(this);
-        frame->WriteOp(Op::Code::Jump);
-        const Address::Single elseJumpIndex = frame->WriteAddress(0); //For back-patching
-        frame->WriteAddress(frame->GetOps().Count() - thenJumpIndex, thenJumpIndex); //Back-patch
+        const Address::Single elseJumpIndex = WriteJump(Op::Code::Jump); //For back-patching
+        PatchJump(thenJumpIndex);
         if (ifStatement->elseBranch)
         {
             ifStatement->elseBranch->Accept(this);
         }
-        frame->WriteAddress(frame->GetOps().Count() - elseJumpIndex, elseJumpIndex);
+        PatchJump(elseJumpIndex);
         return 0;
     }
+
+    std::any BytecodeVisitor::Visit(AST::WhileStatement* whileStatement)
+    {
+        const Address::Single loopStart = frame->GetOps().Count();
+        whileStatement->condition->Accept(this);
+        const Address::Single exitJump = WriteJump(Op::Code::JumpIfFalse);
+        frame->WriteOp(Op::Code::Pop);
+        if (whileStatement->body)
+        {
+            whileStatement->body->Accept(this);
+        }
+        WriteLoop(loopStart);
+        PatchJump(exitJump);
+        frame->WriteOp(Op::Code::Pop);
+        return 0;
+    }
+
+    std::any BytecodeVisitor::Visit(AST::ForStatement* forStatement)
+    {
+        BeginScope();
+        if (forStatement->initialiser)
+        {
+            forStatement->initialiser->Accept(this);
+        }
+        const Address::Single loopStart = frame->GetOps().Count();
+        int exitJump = -1;
+        if (forStatement->condition)
+        {
+            forStatement->condition->Accept(this);
+            exitJump = WriteJump(Op::Code::JumpIfFalse);
+            frame->WriteOp(Op::Pop);
+        }
+        forStatement->body->Accept(this);
+        if (forStatement->increment)
+        {
+            forStatement->increment->Accept(this);
+        }
+        WriteLoop(loopStart);
+        if (exitJump != -1)
+        {
+            PatchJump(exitJump);
+            frame->WriteOp(Op::Pop);
+        }
+        EndScope();
+        return 0;
+    }
+
 
     void BytecodeVisitor::DefineVariable(const std::string& name)
     {
@@ -224,9 +284,10 @@ namespace Noble::Compiler::Bytecode
     {
         for (int i = static_cast<int>(localVariables.size()) - 1; i >= 0; i--)
         {
-            if (auto [localName, localDepth] = localVariables[i]; name == localName)
+            LocalVariable localVariable = localVariables[i];
+            if (localVariables[i].name == name)
             {
-                if (localDepth == -1) throw Exceptions::ByteCodeVisitorException("Can't read variable in its own initialiser.");
+                if (localVariables[i].depth == -1) throw Exceptions::ByteCodeVisitorException("Can't read variable in its own initialiser.");
                 return i;
             }
         }
@@ -255,4 +316,22 @@ namespace Noble::Compiler::Bytecode
             frame->WriteAddress(popCount);
         }
     }
+
+    Address::Single BytecodeVisitor::WriteJump(const Op::Code jumpCode) const
+    {
+        frame->WriteOp(jumpCode);
+        return frame->WriteAddress(0); //Write empty address for back-patching later.
+    }
+
+    void BytecodeVisitor::PatchJump(const Address::Single jumpAddr) const
+    {
+        frame->WriteAddress(frame->GetOps().Count() - jumpAddr, jumpAddr); //Back-patch
+    }
+
+    void BytecodeVisitor::WriteLoop(const Address::Single loopStart) const
+    {
+        frame->WriteOp(Op::Code::Loop);
+        frame->WriteAddress(frame->GetOps().Count() - loopStart + Translation::OpsPerAddress);
+    }
+
 }

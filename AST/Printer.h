@@ -20,10 +20,15 @@ namespace Noble::Compiler::AST
         std::any Visit(UnaryExpression* unaryExpression) override;
         std::any Visit(VariableExpression* variableExpression) override;
         std::any Visit(AssignmentExpression* assignmentExpression) override;
+        std::any Visit(LogicalExpression* logicalExpression) override;
 
         //Statement Visitor Overrides
         std::any Visit(ExpressionStatement* expressionStatement) override;
         std::any Visit(VariableStatement* variableStatement) override;
+        std::any Visit(BlockStatement* blockStatement) override;
+        std::any Visit(IfStatement* ifStatement) override;
+        std::any Visit(WhileStatement* whileStatement) override;
+        std::any Visit(ForStatement *forStatement) override;
 
         std::any Parenthesize(const std::string& name, std::initializer_list<Expression*> expressions);
     };

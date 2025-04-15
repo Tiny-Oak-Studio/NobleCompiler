@@ -85,6 +85,12 @@ add_executable(
         AST/BlockStatement.h
         AST/IfStatement.cpp
         AST/IfStatement.h
+        AST/LogicalExpression.cpp
+        AST/LogicalExpression.h
+        AST/WhileStatement.cpp
+        AST/WhileStatement.h
+        AST/ForStatement.cpp
+        AST/ForStatement.h
 )
 
 add_executable(
@@ -150,6 +156,12 @@ add_executable(
         AST/BlockStatement.h
         AST/IfStatement.cpp
         AST/IfStatement.h
+        AST/LogicalExpression.cpp
+        AST/LogicalExpression.h
+        AST/WhileStatement.cpp
+        AST/WhileStatement.h
+        AST/ForStatement.cpp
+        AST/ForStatement.h
 )
 
 target_link_libraries(
