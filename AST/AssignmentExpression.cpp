@@ -6,7 +6,7 @@ namespace Noble::Compiler::AST
         name(name),
         value(std::move(value))
     {
-        ExpressionType = Type::Assignment;
+        ExpressionType = Assignment;
     }
 
     std::any AssignmentExpression::Accept(ExpressionVisitor *visitor)
@@ -14,6 +14,4 @@ namespace Noble::Compiler::AST
         visitor->Visit(this);
         return 0;
     }
-
-
 } // Noble::Compiler::AST

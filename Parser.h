@@ -61,6 +61,8 @@ namespace Noble::Compiler
         AST::ExprPtr Factor();
         AST::ExprPtr Unary();
         AST::ExprPtr Primary();
+        AST::ExprPtr Call();
+        AST::ExprPtr FinishCall(AST::ExprPtr& callee);
         std::vector<AST::StatementPtr> Block();
     };
 } // Noble::Compiler

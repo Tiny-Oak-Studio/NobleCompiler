@@ -9,12 +9,12 @@ namespace Noble::Compiler::AST
 {
     struct GroupingExpression final : Expression
     {
-        ExprPtr expression = nullptr;
+        ExprPtr expression;
 
         GroupingExpression(ExprPtr& expression);
 
         std::any Accept(ExpressionVisitor *visitor) override;
     };
-} // Noble
+} // Noble::Compiler::AST
 
 #endif //GROUPING_H_INCLUDED

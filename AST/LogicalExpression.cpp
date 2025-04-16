@@ -20,5 +20,4 @@ namespace Noble::Compiler::AST
     {
         return visitor->Visit(this);
     }
-
 } // Noble::Compiler::AST

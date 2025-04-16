@@ -15,7 +15,7 @@ namespace Noble::Compiler::AST
 
         ForStatement(StatementPtr& initialiser, ExprPtr& condition, ExprPtr& increment, StatementPtr& body);
 
-        std::any Accept(struct StatementVisitor *statementVisitor) override;
+        std::any Accept(StatementVisitor *statementVisitor) override;
     };
 } // Noble::Compiler::AST
 

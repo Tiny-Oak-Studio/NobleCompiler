@@ -18,5 +18,4 @@ namespace Noble::Compiler::AST
     {
         return statementVisitor->Visit(this);
     }
-
 } // Noble::Compiler::AST

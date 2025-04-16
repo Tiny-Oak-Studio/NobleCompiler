@@ -66,8 +66,9 @@ namespace Noble::Compiler::Bytecode
         std::any Visit(AST::LiteralExpression* literalExpression) override;
         std::any Visit(AST::UnaryExpression* unaryExpression) override;
         std::any Visit(AST::VariableExpression* variableExpression) override;
-        std::any Visit(AST::AssignmentExpression *assignmentExpression) override;
+        std::any Visit(AST::AssignmentExpression* assignmentExpression) override;
         std::any Visit(AST::LogicalExpression* logicalExpression) override;
+        std::any Visit(AST::CallExpression* callExpression) override;
 
         //StatementVisitor overrides
         std::any Visit(AST::ExpressionStatement* expressionStatement) override;

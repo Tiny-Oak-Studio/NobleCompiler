@@ -1,6 +1,7 @@
 #include "Parser.h"
 
 #include <chrono>
+#include <complex>
 
 #include "AST/AssignmentExpression.h"
 #include "AST/VariableExpression.h"
@@ -12,6 +13,7 @@
 #include "AST/ForStatement.h"
 #include "Exceptions/ParseException.h"
 #include "AST/BinaryExpression.h"
+#include "AST/CallExpression.h"
 #include "AST/UnaryExpression.h"
 #include "AST/LiteralExpression.h"
 #include "AST/GroupingExpression.h"
@@ -370,6 +372,38 @@ namespace Noble::Compiler
         return nullptr;
     }
 
+    AST::ExprPtr Parser::Call()
+    {
+        AST::ExprPtr expr = Primary();
+        while (true)
+        {
+            if (Match({Token::Type::LeftParen}))
+            {
+                expr = FinishCall(expr);
+            }
+            else
+            {
+                break;
+            }
+        }
+        return expr;
+    }
+
+    AST::ExprPtr Parser::FinishCall(AST::ExprPtr& callee)
+    {
+        std::vector<AST::ExprPtr> arguments;
+        if (!Check({Token::Type::RightParen}))
+        {
+            do
+            {
+                arguments.emplace_back(Expression());
+            } while (Match({Token::Type::Comma}));
+        }
+        const Token* paren = Consume(Token::Type::RightParen, "Expect ')' after function arguments.");
+        return std::make_unique<AST::CallExpression>(callee, paren, arguments);
+    }
+
+
     std::vector<AST::StatementPtr> Parser::Block()
     {
         std::vector<AST::StatementPtr> statements;
@@ -380,5 +414,4 @@ namespace Noble::Compiler
         Consume(Token::Type::RightBrace, "Expect '}' after block.");
         return statements;
     }
-
 }

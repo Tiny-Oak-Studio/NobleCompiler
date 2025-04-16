@@ -91,6 +91,8 @@ add_executable(
         AST/WhileStatement.h
         AST/ForStatement.cpp
         AST/ForStatement.h
+        AST/CallExpression.cpp
+        AST/CallExpression.h
 )
 
 add_executable(
@@ -162,6 +164,8 @@ add_executable(
         AST/WhileStatement.h
         AST/ForStatement.cpp
         AST/ForStatement.h
+        AST/CallExpression.cpp
+        AST/CallExpression.h
 )
 
 target_link_libraries(

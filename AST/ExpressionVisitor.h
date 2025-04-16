@@ -15,6 +15,7 @@ namespace Noble::Compiler::AST
         virtual std::any Visit(struct VariableExpression* variableExpression) = 0;
         virtual std::any Visit(struct AssignmentExpression* assignmentExpression) = 0;
         virtual std::any Visit(struct LogicalExpression* logicalExpression) = 0;
+        virtual std::any Visit(struct CallExpression* callExpression) = 0;
     };
 }
 

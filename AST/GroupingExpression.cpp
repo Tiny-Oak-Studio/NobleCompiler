@@ -5,7 +5,7 @@ namespace Noble::Compiler::AST
     GroupingExpression::GroupingExpression(ExprPtr& expression) :
         expression(std::move(expression))
     {
-        ExpressionType = Type::Grouping;
+        ExpressionType = Grouping;
     }
 
     std::any GroupingExpression::Accept(ExpressionVisitor* visitor)

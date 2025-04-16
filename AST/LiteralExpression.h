@@ -2,7 +2,6 @@
 #define LITERALEXPRESSION_H_INCLUDED
 
 #include <string>
-#include <stdfloat>
 #include <variant>
 #include "Expression.h"
 #include "ExpressionVisitor.h"

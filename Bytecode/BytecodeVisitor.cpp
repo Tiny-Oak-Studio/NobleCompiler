@@ -32,7 +32,6 @@ namespace Noble::Compiler::Bytecode
         binaryExpression->right->Accept(this);
         binaryExpression->left->Accept(this);
 
-        //std::cout << binaryExpression->operation->ToString() << " ";
         switch (binaryExpression->operation->type)
         {
             case Token::Type::EqualEqual:   frame->WriteOp(Op::Code::Equal);        break;
@@ -57,7 +56,6 @@ namespace Noble::Compiler::Bytecode
 
     std::any BytecodeVisitor::Visit(AST::LiteralExpression* literalExpression)
     {
-        //std::cout << literalExpression->ToString() << " ";
         switch (literalExpression->type)
         {
             case AST::LiteralExpression::Type::Boolean: frame->WriteConstant(ToValue(std::get<bool>(literalExpression->data))); break;
@@ -72,7 +70,6 @@ namespace Noble::Compiler::Bytecode
     {
         unaryExpression->right->Accept(this);
 
-        //std::cout << unaryExpression->operation->ToString() << " ";
         switch (unaryExpression->operation->type)
         {
             case Token::Type::Bang:  frame->WriteOp(Op::Code::Not);    break;
@@ -170,6 +167,13 @@ namespace Noble::Compiler::Bytecode
         PatchJump(endJump);
         return 0;
     }
+
+    std::any BytecodeVisitor::Visit(AST::CallExpression* callExpression)
+    {
+        //TODO Add call generation code
+        return 0;
+    }
+
 
     std::any BytecodeVisitor::Visit(AST::IfStatement* ifStatement)
     {

@@ -7,7 +7,7 @@ namespace Noble::Compiler::AST
         operation(operation),
         right(std::move(right))
     {
-        ExpressionType = Type::Binary;
+        ExpressionType = Binary;
     }
 
     std::any BinaryExpression::Accept(ExpressionVisitor* visitor)

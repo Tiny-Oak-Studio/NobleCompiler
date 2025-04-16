@@ -3,30 +3,30 @@
 namespace Noble::Compiler::AST
 {
     LiteralExpression::LiteralExpression() :
-        type(Type::Null)
+        type(Null)
     {
-        ExpressionType = Expression::Type::Literal;
+        ExpressionType = Literal;
     }
 
     LiteralExpression::LiteralExpression(const std::string &value) :
         data(value),
-        type(Type::String)
+        type(String)
     {
-        ExpressionType = Expression::Type::Literal;
+        ExpressionType = Literal;
     }
 
     LiteralExpression::LiteralExpression(const Core::Runtime::FloatType value) :
         data(value),
-        type(Type::Number)
+        type(Number)
     {
-        ExpressionType = Expression::Type::Literal;
+        ExpressionType = Literal;
     }
 
     LiteralExpression::LiteralExpression(const bool value) :
         data(value),
-        type(Type::Boolean)
+        type(Boolean)
     {
-        ExpressionType = Expression::Type::Literal;
+        ExpressionType = Literal;
     }
 
     std::any LiteralExpression::Accept(ExpressionVisitor* visitor)
