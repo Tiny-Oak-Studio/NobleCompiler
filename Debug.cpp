@@ -14,9 +14,6 @@ namespace Noble::Compiler
         switch (op)
         {
             case Op::Code::Add:          ss << "ADD"; break;
-            case Op::Code::BitwiseAnd:   ss << "BWA"; break;
-            case Op::Code::BitwiseOr:    ss << "BWO"; break;
-            case Op::Code::BitwiseXor:   ss << "BWX"; break;
             case Op::Code::Constant:     ss << "CST"; break;
             case Op::Code::DefineGlobal: ss << "DFG"; break;
             case Op::Code::Divide:       ss << "DIV"; break;
@@ -31,8 +28,6 @@ namespace Noble::Compiler
             case Op::Code::JumpIfTrue:   ss << "JIT"; break;
             case Op::Code::Less:         ss << "LES"; break;
             case Op::Code::LessEqual:    ss << "LEQ"; break;
-            case Op::Code::LogicalAnd:   ss << "LGA"; break;
-            case Op::Code::LogicalOr:    ss << "LOR"; break;
             case Op::Code::Loop:         ss << "LOP"; break;
             case Op::Code::Multiply:     ss << "MUL"; break;
             case Op::Code::Negate:       ss << "NEG"; break;
