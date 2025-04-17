@@ -246,11 +246,15 @@ namespace Noble::Compiler::Bytecode
             return;
         }
 
-        frame->WriteOp(Op::Code::DefineGlobal);
-        //If the global is already defined then we redefine it using the same address
-        frame->WriteAddress(globalVariables.contains(name) ? globalVariables[name] : nextGlobalAddress);
+        if (globalVariables.contains(name))
+        {
+            throw Exceptions::ByteCodeVisitorException("Global variable with name '" + name + "' has already been defined.");
+        }
 
-        //Map the global var to its address for later access.
+        frame->WriteOp(Op::Code::DefineGlobal);
+        //frame->WriteAddress(nextGlobalAddress);
+
+        //Map the global var to its address for writing set/get ops later access.
         globalVariables[name] = nextGlobalAddress++;
     }
 
@@ -313,12 +317,7 @@ namespace Noble::Compiler::Bytecode
             popCount++;
             localVariables.pop_back();
         }
-        //Don't pop if there were no local variables to pop on the stack
-        if (popCount > 0)
-        {
-            frame->WriteOp(Op::Code::PopN);
-            frame->WriteAddress(popCount);
-        }
+        WritePop(popCount);
     }
 
     Address::Single BytecodeVisitor::WriteJump(const Op::Code jumpCode) const
@@ -338,4 +337,25 @@ namespace Noble::Compiler::Bytecode
         frame->WriteAddress(frame->GetOps().Count() - loopStart + Translation::OpsPerAddress);
     }
 
+    void BytecodeVisitor::WritePop(const Address::Single numPops) const
+    {
+        if (numPops == 0) return;
+
+        //OpsPerAddress + 1 is the size of a PopN operation followed by an address
+        //If we can emit less bytecode using 'Op::Pop's instead then we do.
+        //In the case they're the same length we use the PopN method because this
+        //allows the VM to perform multiple pops in one cycle.
+        if (numPops < Translation::OpsPerAddress + 1)
+        {
+            for (Address::Single i = 0; i < numPops; ++i)
+            {
+                frame->WriteOp(Op::Code::Pop);
+            }
+        }
+        else
+        {
+            frame->WriteOp(Op::Code::PopN);
+            frame->WriteAddress(numPops);
+        }
+    }
 }

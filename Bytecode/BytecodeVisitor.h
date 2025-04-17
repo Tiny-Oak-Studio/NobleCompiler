@@ -111,6 +111,8 @@ namespace Noble::Compiler::Bytecode
         void PatchJump(const Address::Single jumpAddr) const;
 
         void WriteLoop(const Address::Single loopStart) const;
+
+        void WritePop(const Address::Single numPops) const;
     };
 }
 

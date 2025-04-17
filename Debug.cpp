@@ -124,13 +124,6 @@ namespace Noble::Compiler
                     i += sizeof(Address::Single);
                     break;
                 }
-                case Op::Code::DefineGlobal:
-                {
-                    const Address::Single globalVarAddress = frame.ReadAddress(i + 1);
-                    debugFile << std::setw(7) << std::setfill('0') << globalVarAddress << "   ";
-                    i += sizeof(Address::Single);
-                    break;
-                }
                 case Op::Code::GetGlobal:
                 {
                     const Address::Single globalVarAddress = frame.ReadAddress(i + 1);
