@@ -11,9 +11,8 @@ namespace Noble::Compiler
 
     Address::Single Frame::WriteAddress(const Address::Single &address)
     {
-        const Address::Single addressAddr = ops.Count();
         ops.Add(Translation::AddressToOps(address));
-        return addressAddr;
+        return ops.Count() - Translation::OpsPerAddress;
     }
 
     void Frame::WriteAddress(const Address::Single &address, const Address::Single &addressIndex)

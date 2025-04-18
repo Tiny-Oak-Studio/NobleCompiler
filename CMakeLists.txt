@@ -93,6 +93,8 @@ add_executable(
         AST/ForStatement.h
         AST/CallExpression.cpp
         AST/CallExpression.h
+        NobleCore/Debug.cpp
+        NobleCore/Debug.h
 )
 
 add_executable(
@@ -166,6 +168,8 @@ add_executable(
         AST/ForStatement.h
         AST/CallExpression.cpp
         AST/CallExpression.h
+        NobleCore/Debug.cpp
+        NobleCore/Debug.h
 )
 
 target_link_libraries(

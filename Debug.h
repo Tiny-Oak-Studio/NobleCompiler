@@ -13,7 +13,6 @@ namespace Noble::Compiler
     class Debug
     {
     public:
-        static std::string OpToString(Op::Code op);
         static std::string TokenToString(const Token& token);
         static bool MakeDebugFile(const Frame &frame, const std::string& name);
         static bool MakeTokenFile(const std::vector<Token>& tokens, const std::string& name);

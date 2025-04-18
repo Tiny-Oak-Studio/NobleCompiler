@@ -57,6 +57,10 @@ namespace Noble::Compiler::AST
         return std::string();
     }
 
+    std::any Printer::Visit(CallExpression *callExpression)
+    {
+        return std::string();
+    }
 
     std::any Printer::Visit(ExpressionStatement* expressionStatement)
     {

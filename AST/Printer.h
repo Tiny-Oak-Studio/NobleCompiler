@@ -21,6 +21,7 @@ namespace Noble::Compiler::AST
         std::any Visit(VariableExpression* variableExpression) override;
         std::any Visit(AssignmentExpression* assignmentExpression) override;
         std::any Visit(LogicalExpression* logicalExpression) override;
+        std::any Visit(CallExpression *callExpression) override;
 
         //Statement Visitor Overrides
         std::any Visit(ExpressionStatement* expressionStatement) override;

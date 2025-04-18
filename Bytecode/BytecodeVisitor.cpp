@@ -225,6 +225,7 @@ namespace Noble::Compiler::Bytecode
         if (forStatement->increment)
         {
             forStatement->increment->Accept(this);
+            frame->WriteOp(Op::Pop);
         }
         WriteLoop(loopStart);
         if (exitJump != -1)
@@ -235,7 +236,6 @@ namespace Noble::Compiler::Bytecode
         EndScope();
         return 0;
     }
-
 
     void BytecodeVisitor::DefineVariable(const std::string& name)
     {
@@ -328,7 +328,7 @@ namespace Noble::Compiler::Bytecode
 
     void BytecodeVisitor::PatchJump(const Address::Single jumpAddr) const
     {
-        frame->WriteAddress(frame->GetOps().Count() - jumpAddr, jumpAddr); //Back-patch
+        frame->WriteAddress(frame->GetOps().Count() - jumpAddr - Translation::OpsPerAddress, jumpAddr); //Back-patch
     }
 
     void BytecodeVisitor::WriteLoop(const Address::Single loopStart) const
