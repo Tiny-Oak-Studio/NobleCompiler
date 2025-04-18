@@ -18,6 +18,7 @@
 #include "AST/LiteralExpression.h"
 #include "AST/GroupingExpression.h"
 #include "AST/LogicalExpression.h"
+#include "AST/PrintStatement.h"
 
 namespace Noble::Compiler
 {
@@ -198,6 +199,10 @@ namespace Noble::Compiler
         {
             return ForStatement();
         }
+        if (Match({Token::Type::Print}))
+        {
+            return PrintStatement();
+        }
         if (Match({Token::Type::LeftBrace}))
         {
             std::vector<AST::StatementPtr> statements = Block();
@@ -217,7 +222,7 @@ namespace Noble::Compiler
     {
         AST::ExprPtr expression = Expression();
         Consume(Token::Type::Semicolon, "Expect ';' after print statement.");
-        return nullptr;//std::make_unique<AST::PrintStatement>(expression);
+        return std::make_unique<AST::PrintStatement>(expression);
     }
 
     AST::StatementPtr Parser::IfStatement()

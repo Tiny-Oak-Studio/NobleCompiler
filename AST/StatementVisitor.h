@@ -14,6 +14,7 @@ namespace Noble::Compiler::AST
         virtual std::any Visit(struct IfStatement* ifStatement) = 0;
         virtual std::any Visit(struct WhileStatement* whileStatement) = 0;
         virtual std::any Visit(struct ForStatement* forStatement) = 0;
+        virtual std::any Visit(struct PrintStatement* printStatement) = 0;
     };
 } //Noble::Compiler::AST
 

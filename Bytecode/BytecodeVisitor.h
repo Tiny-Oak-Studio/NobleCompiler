@@ -77,6 +77,7 @@ namespace Noble::Compiler::Bytecode
         std::any Visit(AST::IfStatement* ifStatement) override;
         std::any Visit(AST::WhileStatement* whileStatement) override;
         std::any Visit(AST::ForStatement *forStatement) override;
+        std::any Visit(AST::PrintStatement* printStatement) override;
 
         //Helper methods
         /**

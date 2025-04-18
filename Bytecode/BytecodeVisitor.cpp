@@ -9,6 +9,7 @@
 #include "../AST/IfStatement.h"
 #include "../AST/LiteralExpression.h"
 #include "../AST/LogicalExpression.h"
+#include "../AST/PrintStatement.h"
 #include "../AST/UnaryExpression.h"
 #include "../AST/VariableExpression.h"
 #include "../AST/VariableStatement.h"
@@ -234,6 +235,13 @@ namespace Noble::Compiler::Bytecode
             frame->WriteOp(Op::Pop);
         }
         EndScope();
+        return 0;
+    }
+
+    std::any BytecodeVisitor::Visit(AST::PrintStatement *printStatement)
+    {
+        printStatement->expression->Accept(this);
+        frame->WriteOp(Op::Code::Print);
         return 0;
     }
 
